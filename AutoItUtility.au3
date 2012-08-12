@@ -1,3 +1,4 @@
+#include-once
 ;
 ; 改行コードを付加し, コンソールに出力する.
 ;
@@ -6,3 +7,4 @@
 Func ConsoleWriteLn($str)
 	ConsoleWrite($str & @CRLF)
 EndFunc   ;==>ConsoleWriteLn
+
