@@ -3,11 +3,14 @@
 
 ;
 ; == オプション ==
-; AutoExruuner.au3 の振る舞いを変更する場合は,
+; AutoExRuuner.au3 の振る舞いを変更する場合は,
 ; $AutoExRunnerConfig グローバル変数 に 設定ファイルを設定すること.
 ;
 Global $AutoExRunnerConfig = ""
 
+;===============================================================================
+; Pubilc Method
+;===============================================================================
 ;
 ; 指定したExcelファイルを読込み, 指定した関数を呼出す.
 ;
@@ -15,10 +18,10 @@ Global $AutoExRunnerConfig = ""
 ; @param $sheet_name 読込むExcelファイルのシート名.
 ; @param $callback_name コールバックする関数名.
 ;
-Func AutoExRunner($file, $sheert_name, $callback_name)
+Func AutoExRunner($file, $sheet_name, $callback_name)
 	Local $excel = ObjGet($file)
 	If (Not @error) And IsObj($excel) Then
-		Local $sheet = $excel.Worksheets($sheert_name)
+		Local $sheet = $excel.Worksheets($sheet_name)
 		If (Not @error) And IsObj($sheet) Then
 			Local $line = Int(IniRead($AutoExRunnerConfig, "Setting", "StartLine", 3))
 			Local $column = Int(IniRead($AutoExRunnerConfig, "Setting", "StartColumn", 1))
@@ -27,7 +30,7 @@ Func AutoExRunner($file, $sheert_name, $callback_name)
 				Local $value = $cell.value
 				If IsNoEnd($value) Then
 					ExitLoop
-				ElseIf IsNumber($value) Then
+				ElseIf StringIsDigit($value) Then
 					Call($callback_name, $sheet, $line)
 				EndIf
 				$line += 1
@@ -45,6 +48,7 @@ EndFunc   ;==>AutoExRunner
 ; @param $sheet 実行中のシートオブジェクト.
 ; @param $line 実行中の行.
 ; @param $key 取得したいセルの項目名.
+; @return セル.
 ;
 Func GetCell($sheet, $line, $key)
 	Local $key_line = Int(IniRead($AutoExRunnerConfig, "Setting", "KeyLine", 2))
@@ -66,16 +70,22 @@ EndFunc   ;==>GetCell
 ;
 ; @param $sheet 実行中のシートオブジェクト.
 ; @param $line 実行中の行.
+; @return No.
 ;
 Func GetNo($sheet, $line)
 	Local $column = Int(IniRead($AutoExRunnerConfig, "Setting", "StartColumn", 1))
 	Return $sheet.cells($line, $column).value
 EndFunc   ;==>GetNo
 
+#region Private Method
+;===============================================================================
+; Private Method
+;===============================================================================
 ;
-;  終端かチェックする.
+; 終端かチェックする.
 ;
-;  @param $value Noの値.
+; @param $value Noの値.
+; @return 終端の有無.
 ;
 Func IsNoEnd($value)
 	Local $ret = False
@@ -85,4 +95,4 @@ Func IsNoEnd($value)
 	Return $ret
 EndFunc   ;==>IsNoEnd
 
-
+#endregion

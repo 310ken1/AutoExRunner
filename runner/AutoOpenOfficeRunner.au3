@@ -62,14 +62,14 @@ Func GetCell($sheet, $line, $key)
 	Local $key_column_max = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "KeyColumnMax", 9))
 	Local $cell = 0
 	While $key_column <= $key_column_max
-        Local $value = $sheet.getCellByPosition($key_column, $key_line).String
-		If $key =  $value Then
+		Local $value = $sheet.getCellByPosition($key_column, $key_line).String
+		If $key = $value Then
 			$cell = $sheet.getCellByPosition($key_column, $line)
 			ExitLoop
 		EndIf
 		$key_column += 1
 	WEnd
-    Local $value = $cell
+	Local $value = $cell
 	Return $value
 EndFunc   ;==>GetCell
 
@@ -78,19 +78,22 @@ EndFunc   ;==>GetCell
 ;
 ; @param $sheet 実行中のシートオブジェクト.
 ; @param $line 実行中の行.
+; @return No.
 ;
 Func GetNo($sheet, $line)
 	Local $column = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "StartColumn", 0))
 	Return $sheet.getCellByPosition($column, $line).getString
 EndFunc   ;==>GetNo
 
+#region Private Method
 ;===============================================================================
 ; Private Method
 ;===============================================================================
 ;
-;  終端かチェックする.
+; 終端かチェックする.
 ;
-;  @param $value Noの値.
+; @param $value Noの値.
+; @return 終端の有無.
 ;
 Func IsNoEnd($value)
 	Local $ret = False
@@ -125,3 +128,5 @@ Func PathToUrl($path)
 	Local $ret = "file:///" & StringRegExpReplace($path, "\\", "/")
 	Return $ret
 EndFunc   ;==>PathToUrl
+
+#endregion

@@ -7,7 +7,7 @@ Func CallBackFunc($sheet, $line)
 	ConsoleWrite("No." & GetNo($sheet, $line) & "   ")
 	For $f In $factor
 		Local $cell = GetCell($sheet, $line, $f)
-		ConsoleWrite($cell.value & "F")
+		ConsoleWrite($cell.value & " : ")
 	Next
 	ConsoleWrite(@CRLF)
 EndFunc   ;==>CallBackFunc
