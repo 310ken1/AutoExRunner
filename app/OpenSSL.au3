@@ -1,7 +1,12 @@
 #include-once
-#include "../../AutoItUtility.au3"
+#include "..\utility\Console.au3"
 
-Global $OpenSSLCmd = @ScriptDir & "\bin\openssl.exe"
+;
+; !! 必須 !!
+; 本ソースコード上で定義されたメソッドを利用する場合は,
+; $OpenSSLCmd グローバル変数 に openssl.exe へのパスを設定すること.
+;
+Global $OpenSSLCmd = ""
 
 ;===============================================================================
 ; Pubilc Method

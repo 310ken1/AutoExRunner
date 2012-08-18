@@ -1,4 +1,4 @@
-#include "AutoExRunner.au3"
+#include "..\..\runner\AutoExRunner.au3"
 
 AutoExRunner(@ScriptDir & "\AutoExRunnerTest.xls", "ÉVÅ[Ég1", "CallBackFunc")
 

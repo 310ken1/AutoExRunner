@@ -1,5 +1,7 @@
-#include "../../AutoExRunner.au3"
-#include "OpenSSL.au3"
+#include "..\..\runner\AutoExRunner.au3"
+#include "..\..\app\OpenSSL.au3"
+
+$OpenSSLCmd = "..\..\bin\openssl.exe"
 
 AutoExRunner(@ScriptDir & "\CertificateList.xls", "ƒ‹[ƒgØ–¾‘", "CreateRootCA")
 

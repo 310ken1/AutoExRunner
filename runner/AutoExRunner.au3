@@ -1,6 +1,12 @@
-#include "AutoItUtility.au3"
+#include-once
+#include "..\utility\Console.au3"
 
-Global $AutoExRunnerConfig = @ScriptDir & "\AutoExRunner.ini"
+;
+; == オプション ==
+; AutoExruuner.au3 の振る舞いを変更する場合は,
+; $AutoExRunnerConfig グローバル変数 に 設定ファイルを設定すること.
+;
+Global $AutoExRunnerConfig = ""
 
 ;
 ; 指定したExcelファイルを読込み, 指定した関数を呼出す.
@@ -65,6 +71,7 @@ Func GetNo($sheet, $line)
 	Local $column = Int(IniRead($AutoExRunnerConfig, "Setting", "StartColumn", 1))
 	Return $sheet.cells($line, $column).value
 EndFunc   ;==>GetNo
+
 ;
 ;  終端かチェックする.
 ;
