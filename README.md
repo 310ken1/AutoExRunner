@@ -3,7 +3,7 @@ AutoExRunner
 
 概要
 -----
-AutoExRunner は、 Excel に入力されたデータを元に 定型処理を実行するための AutoIt スクリプトです。
+AutoExRunner は、 Excel もしくは OpenOffice に入力されたデータを元に 定型処理を実行するための AutoIt スクリプトです。
 
 
 実行環境
@@ -11,7 +11,7 @@ AutoExRunner は、 Excel に入力されたデータを元に 定型処理を�
 AutoExRunner を実行するためには、以下のソフトウェアをインストールして下さい。
 
 1. [AutoIt v3](http://www.autoitscript.com/site/autoit/downloads/)
-2. Microsoft Excel
+2. Microsoft Excel もしくは [Apache OpenOffice](http://www.openoffice.org/ja/)
 
 
 使用方法
