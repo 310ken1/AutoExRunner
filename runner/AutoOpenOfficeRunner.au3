@@ -7,6 +7,8 @@
 ;
 Global $AutoOpenOfficeRuunerConfig = ""
 
+Const $AutoOpenOfficeRuunerSettingTag = "AutoOpenOfficeRuunerSetting"
+
 ;===============================================================================
 ; Pubilc Method
 ;===============================================================================
@@ -27,8 +29,8 @@ Func AutoOpenOfficeRunner($file, $sheet_name, $callback_name)
 	If (Not @error) And IsObj($component) Then
 		Local $sheet = $component.Sheets.getByName($sheet_name)
 		If (Not @error) And IsObj($sheet) Then
-			Local $line = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "StartLine", 2))
-			Local $column = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "StartColumn", 0))
+			Local $line = Int(IniRead($AutoOpenOfficeRuunerConfig, $AutoOpenOfficeRuunerSettingTag, "StartLine", 2))
+			Local $column = Int(IniRead($AutoOpenOfficeRuunerConfig, $AutoOpenOfficeRuunerSettingTag, "StartColumn", 0))
 			While True
 				Local $cell = $sheet.getCellByPosition($column, $line)
 				Local $value = $cell.String
@@ -57,9 +59,9 @@ EndFunc   ;==>AutoOpenOfficeRunner
 ; @return セル.
 ;
 Func GetCell($sheet, $line, $key)
-	Local $key_line = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "KeyLine", 1))
-	Local $key_column = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "KeyColumn", 1))
-	Local $key_column_max = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "KeyColumnMax", 9))
+	Local $key_line = Int(IniRead($AutoOpenOfficeRuunerConfig, $AutoOpenOfficeRuunerSettingTag, "KeyLine", 1))
+	Local $key_column = Int(IniRead($AutoOpenOfficeRuunerConfig, $AutoOpenOfficeRuunerSettingTag, "KeyColumn", 1))
+	Local $key_column_max = Int(IniRead($AutoOpenOfficeRuunerConfig, $AutoOpenOfficeRuunerSettingTag, "KeyColumnMax", 9))
 	Local $cell = 0
 	While $key_column <= $key_column_max
 		Local $value = $sheet.getCellByPosition($key_column, $key_line).String
@@ -69,9 +71,25 @@ Func GetCell($sheet, $line, $key)
 		EndIf
 		$key_column += 1
 	WEnd
-	Local $value = $cell
-	Return $value
+	Return $cell
 EndFunc   ;==>GetCell
+
+;
+; セルの値(文字列)を取得する.
+;
+; @param $sheet 実行中のシートオブジェクト.
+; @param $line 実行中の行.
+; @param $key 取得したいセルの項目名.
+; @return セルの値(文字列).
+;
+Func GetString($sheet, $line, $key)
+	Local $value = ""
+	Local $cell = GetCell($sheet, $line, $key)
+	If IsObj($cell) Then
+		$value = $cell.String
+	EndIf
+	Return $value
+EndFunc   ;==>GetString
 
 ;
 ; No を取得する.
@@ -81,7 +99,7 @@ EndFunc   ;==>GetCell
 ; @return No.
 ;
 Func GetNo($sheet, $line)
-	Local $column = Int(IniRead($AutoOpenOfficeRuunerConfig, "Setting", "StartColumn", 0))
+	Local $column = Int(IniRead($AutoOpenOfficeRuunerConfig, $AutoOpenOfficeRuunerSettingTag, "StartColumn", 0))
 	Return $sheet.getCellByPosition($column, $line).getString
 EndFunc   ;==>GetNo
 
@@ -129,4 +147,4 @@ Func PathToUrl($path)
 	Return $ret
 EndFunc   ;==>PathToUrl
 
-#endregion
+#endregion Private Method

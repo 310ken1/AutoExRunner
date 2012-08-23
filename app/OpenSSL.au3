@@ -6,7 +6,17 @@
 ; 本ソースコード上で定義されたメソッドを利用する場合は,
 ; $OpenSSLCmd グローバル変数 に openssl.exe へのパスを設定すること.
 ;
-Global $OpenSSLCmd = ""
+Global $OpenSSLCmd = "openssl.exe"
+
+Const $OpenSSLConsoleClass = "[CLASS:ConsoleWindowClass]"
+
+Const $OpenSSLKeyName = "private.key"
+Const $OpenSSLConfigName = "openssl.cnf"
+Const $OpenSSLCertificateName = "certificate.crt"
+Const $OpenSSLCertificationSigningRequest = "CertificationSigningRequest.csr"
+Const $OpenSSLDataBaseName = "database"
+Const $OpenSSLSerialName = "serial"
+Const $OpenSSLRandName = ".rand"
 
 ;===============================================================================
 ; Pubilc Method
@@ -24,52 +34,90 @@ Global $OpenSSLCmd = ""
 Func CreateRootCertificate($name, $bits, $md, $days, $hook = 0)
 	DirCreate($name)
 
-	Local $keyfile = $name & "\private.key"
+	Local $keyfile = $name & "\" & $OpenSSLKeyName
 	CreateRsaPrivateKey($bits, $keyfile)
 
-	Local $confgfile = $name & "\config"
-	CreateConfigurationTemplate($confgfile, $name)
+	Local $configfile = $name & "\" & $OpenSSLConfigName
+	CreateConfigurationTemplate($configfile, $name)
 	If IsString($hook) Then
-		Call($hook, $confgfile)
+		Call($hook, $configfile)
 	EndIf
 
-	Local $crtfile = $name & "\root.crt"
-	SelfSigned($keyfile, $days, $md, $confgfile, $crtfile)
+	Local $crtfile = $name & "\" & $OpenSSLCertificateName
+	SelfSigned($keyfile, $days, $md, $configfile, $crtfile)
 
-	Local $dbfile = $name & "\database"
+	Local $dbfile = $name & "\" & $OpenSSLDataBaseName
 	CreateDataBase($dbfile)
 
-	Local $serialfile = $name & "\serial"
+	Local $serialfile = $name & "\" & $OpenSSLSerialName
 	CreateSerialFile($crtfile, $serialfile)
 EndFunc   ;==>CreateRootCertificate
 
 ;
 ; 中間証明書を生成する.
 ;
+; @param $name 名称.
+; @param $bits 鍵長.
+; @param $md 署名のメッセージダイジェスト.
+; @param $days 証明書の有効期限.
+; @param $ca 認証局フォルダへのパス.
+; @param $hook 生成時の設定ファイルを書き換えるためのフック関数名.
+;
 Func CreateIntermediateCertificate($name, $bits, $md, $days, $ca, $hook = 0)
 	DirCreate($name)
 
-	Local $keyfile = $name & "\private.key"
+	Local $keyfile = $name & "\" & $OpenSSLKeyName
 	CreateRsaPrivateKey($bits, $keyfile)
 
-	Local $confgfile = $name & "\config"
-	CreateConfigurationTemplate($confgfile, $name)
-	IniWrite($confgfile, "CA_default", "dir", "./" & $ca)
+	Local $configfile = $name & "\" & $OpenSSLConfigName
+	CreateConfigurationTemplate($configfile, $name)
+	IniWrite($configfile, "CA_default", "dir", $ca)
 	If IsString($hook) Then
-		Call($hook, $confgfile)
+		Call($hook, $configfile)
 	EndIf
 
-	Local $csrfile = $name & "\req.csr"
-	CreateCertificationSigningRequest($keyfile, $confgfile, $csrfile)
+	Local $csrfile = $name & "\" & $OpenSSLCertificationSigningRequest
+	CreateCertificationSigningRequest($keyfile, $configfile, $csrfile)
 
-	Local $crtfile = $name & "\intermediate.crt"
-	Signed($csrfile, $days, $md, $confgfile, $crtfile)
+	Local $crtfile = $name & "\" & $OpenSSLCertificateName
+	Signed($csrfile, $days, $md, $configfile, $crtfile)
+
+	Local $dbfile = $name & "\" & $OpenSSLDataBaseName
+	CreateDataBase($dbfile)
+
+	Local $serialfile = $name & "\" & $OpenSSLSerialName
+	CreateSerialFile($crtfile, $serialfile)
 EndFunc   ;==>CreateIntermediateCertificate
 
 ;
 ; サーバ証明書を生成する.
 ;
-Func CreateServerCertificate()
+; @param $name 名称.
+; @param $bits 鍵長.
+; @param $md 署名のメッセージダイジェスト.
+; @param $days 証明書の有効期限.
+; @param $ca 認証局フォルダへのパス.
+; @param $hook 生成時の設定ファイルを書き換えるためのフック関数名.
+;
+Func CreateServerCertificate($name, $bits, $md, $days, $ca, $hook = 0)
+	DirCreate($name)
+
+	Local $keyfile = $name & "\" & $OpenSSLKeyName
+	CreateRsaPrivateKey($bits, $keyfile)
+
+	Local $configfile = $name & "\" & $OpenSSLConfigName
+	CreateConfigurationTemplate($configfile, $name)
+	IniWrite($configfile, "CA_default", "dir", $ca)
+	IniWrite($configfile, "usr_cert", "basicConstraints", "CA:FALSE")
+	If IsString($hook) Then
+		Call($hook, $configfile)
+	EndIf
+
+	Local $csrfile = $name & "\" & $OpenSSLCertificationSigningRequest
+	CreateCertificationSigningRequest($keyfile, $configfile, $csrfile)
+
+	Local $crtfile = $name & "\" & $OpenSSLCertificateName
+	Signed($csrfile, $days, $md, $configfile, $crtfile)
 EndFunc   ;==>CreateServerCertificate
 
 ;
@@ -127,9 +175,9 @@ Func Signed($csr_file, $days, $md, $config_file, $output_file)
 	Local $cmd = StringFormat("%s ca -md %s -in %s -out %s -config %s -days %s", $OpenSSLCmd, $md, $csr_file, $output_file, $config_file, $days)
 	ConsoleWriteLn($cmd)
 	Run($cmd)
-	WinWaitActive($OpenSSLCmd)
-	ControlSend($OpenSSLCmd, "", "", "y{ENTER}")
-	ControlSend($OpenSSLCmd, "", "", "y{ENTER}")
+	WinWaitActive($OpenSSLConsoleClass)
+	ControlSend($OpenSSLConsoleClass, "", "", "y{ENTER}")
+	ControlSend($OpenSSLConsoleClass, "", "", "y{ENTER}")
 EndFunc   ;==>Signed
 
 ;
@@ -149,21 +197,24 @@ EndFunc   ;==>CreateCertificationSigningRequest
 ; 設定ファイルのテンプレートを生成する.
 ;
 ; @param $file 設定ファイル.
-; @param $name 名称(フォルダ名).
+; @param $ca_dir 認証局情報が格納されたフォルダ.
 ;
-Func CreateConfigurationTemplate($file, $name)
-	Local $ca[1][2] = [["default_ca", "CA_default"]]
+Func CreateConfigurationTemplate($file, $ca_dir)
+	Local $ca[1][2] = [ _
+			["default_ca", "CA_default"] _
+			]
 	IniWriteSection($file, "ca", $ca, 0)
 
-	Local $ca_default[8][2] = [ _
-			["dir", "./" & $name], _
-			["certificate", "$dir/root.crt"], _
-			["private_key", "$dir/private.key"], _
-			["database", "$dir/database"], _
-			["serial", "$dir/serial"], _
+	Local $ca_default[9][2] = [ _
+			["dir", $ca_dir], _
+			["certificate", "$dir/" & $OpenSSLCertificateName], _
+			["private_key", "$dir/" & $OpenSSLKeyName], _
+			["database", "$dir/" & $OpenSSLDataBaseName], _
+			["serial", "$dir/" & $OpenSSLSerialName], _
 			["policy", "policy_anything"], _
 			["x509_extensions", "usr_cert"], _
-			["new_certs_dir", "$dir"] _
+			["new_certs_dir", "$dir/"], _
+			["RANDFILE", "$dir" & $OpenSSLRandName] _
 			]
 	IniWriteSection($file, "CA_default", $ca_default, 0)
 
@@ -191,7 +242,7 @@ Func CreateConfigurationTemplate($file, $name)
 	IniWriteSection($file, "req", $req, 0)
 
 	Local $reqreq_distinguished_name[1][2] = [ _
-			["commonName", "example.com"] _
+			["CN", "example.com"] _
 			]
 	IniWriteSection($file, "req_distinguished_name", $reqreq_distinguished_name, 0)
 

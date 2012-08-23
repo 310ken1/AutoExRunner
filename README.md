@@ -23,3 +23,5 @@ AutoExRunnerTest.au3 を参照して下さい。
 ---------
 ライセンスは、[パブリックドメイン](http://ja.wikipedia.org/wiki/%E3%83%91%E3%83%96%E3%83%AA%E3%83%83%E3%82%AF%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3)です。
 
+このプロダクトは、OpenSSLツールキットを利用するために、OpenSSLプロジェクトによって開発されたソフトウェアを含みます。
+(This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit)」

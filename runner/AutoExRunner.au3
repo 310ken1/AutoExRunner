@@ -8,6 +8,8 @@
 ;
 Global $AutoExRunnerConfig = ""
 
+Const $AutoExRunnerSettingTag = "AutoExRunnerSetting"
+
 ;===============================================================================
 ; Pubilc Method
 ;===============================================================================
@@ -23,8 +25,8 @@ Func AutoExRunner($file, $sheet_name, $callback_name)
 	If (Not @error) And IsObj($excel) Then
 		Local $sheet = $excel.Worksheets($sheet_name)
 		If (Not @error) And IsObj($sheet) Then
-			Local $line = Int(IniRead($AutoExRunnerConfig, "Setting", "StartLine", 3))
-			Local $column = Int(IniRead($AutoExRunnerConfig, "Setting", "StartColumn", 1))
+			Local $line = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "StartLine", 3))
+			Local $column = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "StartColumn", 1))
 			While True
 				Local $cell = $sheet.cells($line, $column)
 				Local $value = $cell.value
@@ -51,9 +53,9 @@ EndFunc   ;==>AutoExRunner
 ; @return セル.
 ;
 Func GetCell($sheet, $line, $key)
-	Local $key_line = Int(IniRead($AutoExRunnerConfig, "Setting", "KeyLine", 2))
-	Local $key_column = Int(IniRead($AutoExRunnerConfig, "Setting", "KeyColumn", 2))
-	Local $key_column_max = Int(IniRead($AutoExRunnerConfig, "Setting", "KeyColumnMax", 10))
+	Local $key_line = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "KeyLine", 2))
+	Local $key_column = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "KeyColumn", 2))
+	Local $key_column_max = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "KeyColumnMax", 10))
 	Local $cell = 0
 	While $key_column <= $key_column_max
 		If $key = $sheet.cells($key_line, $key_column).value Then
@@ -66,6 +68,23 @@ Func GetCell($sheet, $line, $key)
 EndFunc   ;==>GetCell
 
 ;
+; セルの値(文字列)を取得する.
+;
+; @param $sheet 実行中のシートオブジェクト.
+; @param $line 実行中の行.
+; @param $key 取得したいセルの項目名.
+; @return セルの値(文字列).
+;
+Func GetString($sheet, $line, $key)
+	Local $value = ""
+	Local $cell = GetCell($sheet, $line, $key)
+	If IsObj($cell) Then
+		$value = $cell.value
+	EndIf
+	Return $value
+EndFunc   ;==>GetString
+
+;
 ; No を取得する.
 ;
 ; @param $sheet 実行中のシートオブジェクト.
@@ -73,7 +92,7 @@ EndFunc   ;==>GetCell
 ; @return No.
 ;
 Func GetNo($sheet, $line)
-	Local $column = Int(IniRead($AutoExRunnerConfig, "Setting", "StartColumn", 1))
+	Local $column = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "StartColumn", 1))
 	Return $sheet.cells($line, $column).value
 EndFunc   ;==>GetNo
 
@@ -95,4 +114,4 @@ Func IsNoEnd($value)
 	Return $ret
 EndFunc   ;==>IsNoEnd
 
-#endregion
+#endregion Private Method
