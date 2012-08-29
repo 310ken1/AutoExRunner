@@ -1,9 +1,9 @@
-#include "..\..\runner\AutoOpenOfficeRunner.au3"
+ï»¿#include "..\..\runner\AutoOpenOfficeRunner.au3"
 
-AutoOpenOfficeRunner(@ScriptDir & "\AutoOpenOfficeRunnerTest.ods", "ƒV[ƒg‚P", "CallBackFunc")
+AutoOpenOfficeRunner(@ScriptDir & "\AutoOpenOfficeRunnerTest.ods", "ã‚·ãƒ¼ãƒˆï¼‘", "CallBackFunc")
 
 Func CallBackFunc($sheet, $line)
-	Local $factor[3] = ["ˆöq‚P", "ˆöq‚Q", "ˆöq‚R"]
+	Local $factor[3] = ["å› å­ï¼‘", "å› å­ï¼’", "å› å­ï¼“"]
 	ConsoleWrite("No." & GetNo($sheet, $line) & "   ")
 	For $f In $factor
 		Local $cell = GetCell($sheet, $line, $f)

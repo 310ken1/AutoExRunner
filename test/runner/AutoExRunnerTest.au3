@@ -1,9 +1,9 @@
-#include "..\..\runner\AutoExRunner.au3"
+ï»¿#include "..\..\runner\AutoExRunner.au3"
 
-AutoExRunner(@ScriptDir & "\AutoExRunnerTest.xls", "ƒV[ƒg1", "CallBackFunc")
+AutoExRunner(@ScriptDir & "\AutoExRunnerTest.xls", "ã‚·ãƒ¼ãƒˆ1", "CallBackFunc")
 
 Func CallBackFunc($sheet, $line)
-	Local $factor[3] = ["ˆöq‚P", "ˆöq‚Q", "ˆöq‚R"]
+	Local $factor[3] = ["å› å­ï¼‘", "å› å­ï¼’", "å› å­ï¼“"]
 	ConsoleWrite("No." & GetNo($sheet, $line) & "   ")
 	For $f In $factor
 		Local $cell = GetCell($sheet, $line, $f)

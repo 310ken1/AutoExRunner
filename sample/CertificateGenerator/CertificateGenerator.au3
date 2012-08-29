@@ -1,21 +1,21 @@
-#include "..\..\runner\AutoOpenOfficeRunner.au3"
+ï»¿#include "..\..\runner\AutoOpenOfficeRunner.au3"
 #include "..\..\app\OpenSSL.au3"
 
 $OpenSSLCmd = @ScriptDir & "\..\..\bin\openssl.exe"
 $AutoOpenOfficeRuunerConfig = @ScriptDir & "\CertificateGenerator.ini"
 
 ;
-; o—ÍƒtƒHƒ‹ƒ_.
+; å‡ºåŠ›ãƒ•ã‚©ãƒ«ãƒ€.
 ;
 Const $OutputDir = @ScriptDir & "\out"
 
 ;
-; “ü—Íƒtƒ@ƒCƒ‹.
+; å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«.
 ;
 Const $InputFile = @ScriptDir & "\CertificateList.ods"
 
 ;
-; ƒTƒuƒWƒFƒNƒg.
+; ã‚µãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
 ;
 Local $subject[8][2] = [ _
 		["C", ""], _
@@ -28,107 +28,107 @@ Local $subject[8][2] = [ _
 		]
 
 ;
-; ƒƒCƒ“ŠÖ”ŒÄ‚Ño‚µ.
+; ãƒ¡ã‚¤ãƒ³é–¢æ•°å‘¼ã³å‡ºã—.
 ;
 Main()
 
 ;
-; ƒƒCƒ“ŠÖ”.
+; ãƒ¡ã‚¤ãƒ³é–¢æ•°.
 ;
 Func Main()
 	DirCreate($OutputDir)
 	FileChangeDir($OutputDir)
 
-	AutoOpenOfficeRunner($InputFile, "ƒ‹[ƒgØ–¾‘", "CreateRootCrt")
-	AutoOpenOfficeRunner($InputFile, "’†ŠÔØ–¾‘", "CreateIntermediateCrt")
-	AutoOpenOfficeRunner($InputFile, "ƒT[ƒoØ–¾‘", "CreateServerCrt")
+	AutoOpenOfficeRunner($InputFile, "ãƒ«ãƒ¼ãƒˆè¨¼æ˜æ›¸", "CreateRootCrt")
+	AutoOpenOfficeRunner($InputFile, "ä¸­é–“è¨¼æ˜æ›¸", "CreateIntermediateCrt")
+	AutoOpenOfficeRunner($InputFile, "ã‚µãƒ¼ãƒè¨¼æ˜æ›¸", "CreateServerCrt")
 EndFunc   ;==>Main
 
 ;
-; ƒ‹[ƒgØ–¾‘‚Ì¶¬ˆ—.
+; ãƒ«ãƒ¼ãƒˆè¨¼æ˜æ›¸ã®ç”Ÿæˆå‡¦ç†.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
 ;
 Func CreateRootCrt($sheet, $line)
 	InitSubject()
 	SetSubject($sheet, $line)
 	CreateRootCertificate( _
-			GetString($sheet, $line, "–¼Ì"), _
-			GetString($sheet, $line, "Œ®’·"), _
-			GetString($sheet, $line, "ƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg"), _
-			GetString($sheet, $line, "—LŒøŠúŒÀ"), _
+			GetString($sheet, $line, "åç§°"), _
+			GetString($sheet, $line, "éµé•·"), _
+			GetString($sheet, $line, "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ"), _
+			GetString($sheet, $line, "æœ‰åŠ¹æœŸé™"), _
 			"HookCreateRootCrt" _
 			)
 EndFunc   ;==>CreateRootCrt
 
 ;
-; ƒ‹[ƒgØ–¾‘‚Ìİ’èƒtƒ@ƒCƒ‹‘‚«Š·‚¦ƒtƒbƒNŠÖ”.
+; ãƒ«ãƒ¼ãƒˆè¨¼æ˜æ›¸ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãæ›ãˆãƒ•ãƒƒã‚¯é–¢æ•°.
 ;
-; @param $config İ’èƒtƒ@ƒCƒ‹–¼.
+; @param $config è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
 ;
 Func HookCreateRootCrt($config)
 	WriteSubject($config)
 EndFunc   ;==>HookCreateRootCrt
 
 ;
-; ’†ŠÔØ–¾‘‚Ì¶¬ˆ—.
+; ä¸­é–“è¨¼æ˜æ›¸ã®ç”Ÿæˆå‡¦ç†.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
 ;
 Func CreateIntermediateCrt($sheet, $line)
 	InitSubject()
 	SetSubject($sheet, $line)
 	CreateIntermediateCertificate( _
-			GetString($sheet, $line, "–¼Ì"), _
-			GetString($sheet, $line, "Œ®’·"), _
-			GetString($sheet, $line, "ƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg"), _
-			GetString($sheet, $line, "—LŒøŠúŒÀ"), _
-			StringRegExpReplace($OutputDir & "\" & GetString($sheet, $line, "”FØ‹Ç"), "\\", "/"), _
+			GetString($sheet, $line, "åç§°"), _
+			GetString($sheet, $line, "éµé•·"), _
+			GetString($sheet, $line, "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ"), _
+			GetString($sheet, $line, "æœ‰åŠ¹æœŸé™"), _
+			StringRegExpReplace($OutputDir & "\" & GetString($sheet, $line, "èªè¨¼å±€"), "\\", "/"), _
 			"HookCreateIntermediateCrt" _
 			)
 EndFunc   ;==>CreateIntermediateCrt
 
 ;
-; ’†ŠÔØ–¾‘‚Ìİ’èƒtƒ@ƒCƒ‹‘‚«Š·‚¦ƒtƒbƒNŠÖ”.
+; ä¸­é–“è¨¼æ˜æ›¸ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãæ›ãˆãƒ•ãƒƒã‚¯é–¢æ•°.
 ;
-; @param $config İ’èƒtƒ@ƒCƒ‹–¼.
+; @param $config è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
 ;
 Func HookCreateIntermediateCrt($config)
 	WriteSubject($config)
 EndFunc   ;==>HookCreateIntermediateCrt
 
 ;
-; ƒT[ƒoØ–¾‘‚Ì¶¬ˆ—.
+; ã‚µãƒ¼ãƒè¨¼æ˜æ›¸ã®ç”Ÿæˆå‡¦ç†.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
 ;
 Func CreateServerCrt($sheet, $line)
 	InitSubject()
 	SetSubject($sheet, $line)
 	CreateServerCertificate( _
-			GetString($sheet, $line, "–¼Ì"), _
-			GetString($sheet, $line, "Œ®’·"), _
-			GetString($sheet, $line, "ƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg"), _
-			GetString($sheet, $line, "—LŒøŠúŒÀ"), _
-			StringRegExpReplace($OutputDir & "\" & GetString($sheet, $line, "”FØ‹Ç"), "\\", "/"), _
+			GetString($sheet, $line, "åç§°"), _
+			GetString($sheet, $line, "éµé•·"), _
+			GetString($sheet, $line, "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ"), _
+			GetString($sheet, $line, "æœ‰åŠ¹æœŸé™"), _
+			StringRegExpReplace($OutputDir & "\" & GetString($sheet, $line, "èªè¨¼å±€"), "\\", "/"), _
 			"HookCreateServerCrt" _
 			)
 EndFunc   ;==>CreateServerCrt
 
 ;
-; ƒT[ƒoØ–¾‘‚Ìİ’èƒtƒ@ƒCƒ‹‘‚«Š·‚¦ƒtƒbƒNŠÖ”.
+; ã‚µãƒ¼ãƒè¨¼æ˜æ›¸ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãæ›ãˆãƒ•ãƒƒã‚¯é–¢æ•°.
 ;
-; @param $config İ’èƒtƒ@ƒCƒ‹–¼.
+; @param $config è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
 ;
 Func HookCreateServerCrt($config)
 	WriteSubject($config)
 EndFunc   ;==>HookCreateServerCrt
 
 ;
-; ƒTƒuƒWƒFƒNƒg‚ğ‰Šú‰»‚·‚é.
+; ã‚µãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆæœŸåŒ–ã™ã‚‹.
 ;
 Func InitSubject()
 	Local $count = UBound($subject, 1)
@@ -138,10 +138,10 @@ Func InitSubject()
 EndFunc   ;==>InitSubject
 
 ;
-; “ü—Íƒtƒ@ƒCƒ‹‚©‚ç’l‚ğ“Ç‚İ, ƒTƒuƒWƒFƒNƒg‚Éİ’è‚·‚é.
+; å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰å€¤ã‚’èª­è¾¼ã¿, ã‚µãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«è¨­å®šã™ã‚‹.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
 ;
 Func SetSubject($sheet, $line)
 	Local $count = UBound($subject, 1)
@@ -154,9 +154,9 @@ Func SetSubject($sheet, $line)
 EndFunc   ;==>SetSubject
 
 ;
-; ƒTƒuƒWƒFƒNƒg‚ğİ’èƒtƒ@ƒCƒ‹‚É‘‚«‚Ş.
+; ã‚µãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚€.
 ;
-; @param $config İ’èƒtƒ@ƒCƒ‹–¼.
+; @param $config è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
 ;
 Func WriteSubject($config)
 	Local $count = UBound($subject, 1)

@@ -1,10 +1,10 @@
-#include-once
+ï»¿#include-once
 #include "..\utility\Console.au3"
 
 ;
-; !! •K{ !!
-; –{ƒ\[ƒXƒR[ƒhã‚Å’è‹`‚³‚ê‚½ƒƒ\ƒbƒh‚ğ—˜—p‚·‚éê‡‚Í,
-; $OpenSSLCmd ƒOƒ[ƒoƒ‹•Ï” ‚É openssl.exe ‚Ö‚ÌƒpƒX‚ğİ’è‚·‚é‚±‚Æ.
+; !! å¿…é ˆ !!
+; æœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ä¸Šã§å®šç¾©ã•ã‚ŒãŸãƒ¡ã‚½ãƒƒãƒ‰ã‚’åˆ©ç”¨ã™ã‚‹å ´åˆã¯,
+; $OpenSSLCmd ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•° ã« openssl.exe ã¸ã®ãƒ‘ã‚¹ã‚’è¨­å®šã™ã‚‹ã“ã¨.
 ;
 Global $OpenSSLCmd = "openssl.exe"
 
@@ -22,14 +22,14 @@ Const $OpenSSLRandName = ".rand"
 ; Pubilc Method
 ;===============================================================================
 ;
-; ƒ‹[ƒgØ–¾‘‚ğ¶¬‚·‚é.
-; $name ‚Åw’è‚µ‚½ƒtƒHƒ‹ƒ_‚ğ¶¬‚µ, ‚»‚ÌƒtƒHƒ‹ƒ_‚ÉŠeíƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚·‚é.
+; ãƒ«ãƒ¼ãƒˆè¨¼æ˜æ›¸ã‚’ç”Ÿæˆã™ã‚‹.
+; $name ã§æŒ‡å®šã—ãŸãƒ•ã‚©ãƒ«ãƒ€ã‚’ç”Ÿæˆã—, ãã®ãƒ•ã‚©ãƒ«ãƒ€ã«å„ç¨®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã™ã‚‹.
 ;
-; @param $name –¼Ì.
-; @param $bits Œ®’·.
-; @param $md –¼‚ÌƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg.
-; @param $days Ø–¾‘‚Ì—LŒøŠúŒÀ.
-; @param $hook ¶¬‚Ìİ’èƒtƒ@ƒCƒ‹‚ğ‘‚«Š·‚¦‚é‚½‚ß‚ÌƒtƒbƒNŠÖ”–¼.
+; @param $name åç§°.
+; @param $bits éµé•·.
+; @param $md ç½²åã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ.
+; @param $days è¨¼æ˜æ›¸ã®æœ‰åŠ¹æœŸé™.
+; @param $hook ç”Ÿæˆæ™‚ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ›¸ãæ›ãˆã‚‹ãŸã‚ã®ãƒ•ãƒƒã‚¯é–¢æ•°å.
 ;
 Func CreateRootCertificate($name, $bits, $md, $days, $hook = 0)
 	DirCreate($name)
@@ -54,14 +54,14 @@ Func CreateRootCertificate($name, $bits, $md, $days, $hook = 0)
 EndFunc   ;==>CreateRootCertificate
 
 ;
-; ’†ŠÔØ–¾‘‚ğ¶¬‚·‚é.
+; ä¸­é–“è¨¼æ˜æ›¸ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $name –¼Ì.
-; @param $bits Œ®’·.
-; @param $md –¼‚ÌƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg.
-; @param $days Ø–¾‘‚Ì—LŒøŠúŒÀ.
-; @param $ca ”FØ‹ÇƒtƒHƒ‹ƒ_‚Ö‚ÌƒpƒX.
-; @param $hook ¶¬‚Ìİ’èƒtƒ@ƒCƒ‹‚ğ‘‚«Š·‚¦‚é‚½‚ß‚ÌƒtƒbƒNŠÖ”–¼.
+; @param $name åç§°.
+; @param $bits éµé•·.
+; @param $md ç½²åã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ.
+; @param $days è¨¼æ˜æ›¸ã®æœ‰åŠ¹æœŸé™.
+; @param $ca èªè¨¼å±€ãƒ•ã‚©ãƒ«ãƒ€ã¸ã®ãƒ‘ã‚¹.
+; @param $hook ç”Ÿæˆæ™‚ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ›¸ãæ›ãˆã‚‹ãŸã‚ã®ãƒ•ãƒƒã‚¯é–¢æ•°å.
 ;
 Func CreateIntermediateCertificate($name, $bits, $md, $days, $ca, $hook = 0)
 	DirCreate($name)
@@ -90,14 +90,14 @@ Func CreateIntermediateCertificate($name, $bits, $md, $days, $ca, $hook = 0)
 EndFunc   ;==>CreateIntermediateCertificate
 
 ;
-; ƒT[ƒoØ–¾‘‚ğ¶¬‚·‚é.
+; ã‚µãƒ¼ãƒè¨¼æ˜æ›¸ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $name –¼Ì.
-; @param $bits Œ®’·.
-; @param $md –¼‚ÌƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg.
-; @param $days Ø–¾‘‚Ì—LŒøŠúŒÀ.
-; @param $ca ”FØ‹ÇƒtƒHƒ‹ƒ_‚Ö‚ÌƒpƒX.
-; @param $hook ¶¬‚Ìİ’èƒtƒ@ƒCƒ‹‚ğ‘‚«Š·‚¦‚é‚½‚ß‚ÌƒtƒbƒNŠÖ”–¼.
+; @param $name åç§°.
+; @param $bits éµé•·.
+; @param $md ç½²åã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ.
+; @param $days è¨¼æ˜æ›¸ã®æœ‰åŠ¹æœŸé™.
+; @param $ca èªè¨¼å±€ãƒ•ã‚©ãƒ«ãƒ€ã¸ã®ãƒ‘ã‚¹.
+; @param $hook ç”Ÿæˆæ™‚ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ›¸ãæ›ãˆã‚‹ãŸã‚ã®ãƒ•ãƒƒã‚¯é–¢æ•°å.
 ;
 Func CreateServerCertificate($name, $bits, $md, $days, $ca, $hook = 0)
 	DirCreate($name)
@@ -121,13 +121,13 @@ Func CreateServerCertificate($name, $bits, $md, $days, $ca, $hook = 0)
 EndFunc   ;==>CreateServerCertificate
 
 ;
-; PEMŒ`®‚ÌØ–¾‘‚ğDERŒ`®‚É•ÏŠ·‚·‚é.
+; PEMå½¢å¼ã®è¨¼æ˜æ›¸ã‚’DERå½¢å¼ã«å¤‰æ›ã™ã‚‹.
 ;
-; @param $pem PEMŒ`®Ø–¾‘(“ü—Í).
-; @param $der DERŒ`®Ø–¾‘(o—Í).
+; @param $pem PEMå½¢å¼è¨¼æ˜æ›¸(å…¥åŠ›).
+; @param $der DERå½¢å¼è¨¼æ˜æ›¸(å‡ºåŠ›).
 ;
 Func PemToDer($pem, $der)
-	Local $cmd = StringFormat("%s x509@-outform DER -in %s -out %s", $OpenSSLCmd, $pem, $der)
+	Local $cmd = StringFormat("%s x509ã€€-outform DER -in %s -out %s", $OpenSSLCmd, $pem, $der)
 	ConsoleWriteLn($cmd)
 	RunWait($cmd)
 EndFunc   ;==>PemToDer
@@ -136,10 +136,10 @@ EndFunc   ;==>PemToDer
 ; Private Method
 ;===============================================================================
 ;
-; RSA”é–§Œ®‚ğ¶¬‚·‚é.
+; RSAç§˜å¯†éµã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $bits ˆÃ†Œ®‚Ìƒrƒbƒg”.
-; @param $output_file o—Íƒtƒ@ƒCƒ‹–¼(”é–§Œ®ƒtƒ@ƒCƒ‹).
+; @param $bits æš—å·éµã®ãƒ“ãƒƒãƒˆæ•°.
+; @param $output_file å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å(ç§˜å¯†éµãƒ•ã‚¡ã‚¤ãƒ«).
 ;
 Func CreateRsaPrivateKey($bits, $output_file)
 	Local $cmd = StringFormat("%s genrsa -out %s %s", $OpenSSLCmd, $output_file, $bits)
@@ -148,13 +148,13 @@ Func CreateRsaPrivateKey($bits, $output_file)
 EndFunc   ;==>CreateRsaPrivateKey
 
 ;
-; ©ŒÈ–¼X.509Ø–¾‘‚ğ¶¬‚·‚é.
+; è‡ªå·±ç½²åX.509è¨¼æ˜æ›¸ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $key_file ”é–§Œ®.
-; @param $days Ø–¾‘‚Ì—LŒøŠúŒÀ.
-; @param $md ƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒg.
-; @param $config_file İ’èƒtƒ@ƒCƒ‹–¼.
-; @param $output_file o—Íƒtƒ@ƒCƒ‹–¼(©ŒÈ–¼Ø–¾‘).
+; @param $key_file ç§˜å¯†éµ.
+; @param $days è¨¼æ˜æ›¸ã®æœ‰åŠ¹æœŸé™.
+; @param $md ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ãƒˆ.
+; @param $config_file è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
+; @param $output_file å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å(è‡ªå·±ç½²åè¨¼æ˜æ›¸).
 ;
 Func SelfSigned($key_file, $days, $md, $config_file, $output_file)
 	Local $cmd = StringFormat("%s req -new -x509 -key %s -%s -out %s -config %s -days %s", $OpenSSLCmd, $key_file, $md, $output_file, $config_file, $days)
@@ -163,13 +163,13 @@ Func SelfSigned($key_file, $days, $md, $config_file, $output_file)
 EndFunc   ;==>SelfSigned
 
 ;
-; X.509Ø–¾‘‚ğ¶¬‚·‚é.
+; X.509è¨¼æ˜æ›¸ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $csr_file –¼—v‹(CSR)ƒtƒ@ƒCƒ‹–¼.
-; @param $days Ø–¾‘‚Ì—LŒøŠúŒÀ.
-; @param $md ƒƒbƒZ[ƒWƒ_ƒCƒWƒFƒXƒGƒg.
-; @param $config_file İ’èƒtƒ@ƒCƒ‹–¼.
-; @param $output_file o—Íƒtƒ@ƒCƒ‹–¼(X.509Ø–¾‘).
+; @param $csr_file ç½²åè¦æ±‚(CSR)ãƒ•ã‚¡ã‚¤ãƒ«å.
+; @param $days è¨¼æ˜æ›¸ã®æœ‰åŠ¹æœŸé™.
+; @param $md ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ€ã‚¤ã‚¸ã‚§ã‚¹ã‚¨ãƒˆ.
+; @param $config_file è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
+; @param $output_file å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å(X.509è¨¼æ˜æ›¸).
 ;
 Func Signed($csr_file, $days, $md, $config_file, $output_file)
 	Local $cmd = StringFormat("%s ca -md %s -in %s -out %s -config %s -days %s", $OpenSSLCmd, $md, $csr_file, $output_file, $config_file, $days)
@@ -181,11 +181,11 @@ Func Signed($csr_file, $days, $md, $config_file, $output_file)
 EndFunc   ;==>Signed
 
 ;
-; –¼—v‹(CSR)‚ğ¶¬‚·‚é.
+; ç½²åè¦æ±‚(CSR)ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $key_file ”é–§Œ®.
-; @param $config_file İ’èƒtƒ@ƒCƒ‹–¼.
-; @param $output_file o—Íƒtƒ@ƒCƒ‹–¼(–¼—v‹).
+; @param $key_file ç§˜å¯†éµ.
+; @param $config_file è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«å.
+; @param $output_file å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å(ç½²åè¦æ±‚).
 ;
 Func CreateCertificationSigningRequest($key_file, $config_file, $output_file)
 	Local $cmd = StringFormat("%s req -new -key %s -out %s -config %s", $OpenSSLCmd, $key_file, $output_file, $config_file)
@@ -194,10 +194,10 @@ Func CreateCertificationSigningRequest($key_file, $config_file, $output_file)
 EndFunc   ;==>CreateCertificationSigningRequest
 
 ;
-; İ’èƒtƒ@ƒCƒ‹‚Ìƒeƒ“ƒvƒŒ[ƒg‚ğ¶¬‚·‚é.
+; è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $file İ’èƒtƒ@ƒCƒ‹.
-; @param $ca_dir ”FØ‹Çî•ñ‚ªŠi”[‚³‚ê‚½ƒtƒHƒ‹ƒ_.
+; @param $file è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«.
+; @param $ca_dir èªè¨¼å±€æƒ…å ±ãŒæ ¼ç´ã•ã‚ŒãŸãƒ•ã‚©ãƒ«ãƒ€.
 ;
 Func CreateConfigurationTemplate($file, $ca_dir)
 	Local $ca[1][2] = [ _
@@ -255,19 +255,19 @@ Func CreateConfigurationTemplate($file, $ca_dir)
 EndFunc   ;==>CreateConfigurationTemplate
 
 ;
-; ƒf[ƒ^ƒx[ƒX‚ğ¶¬‚·‚é.
+; ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $file ¶¬‚·‚éƒtƒ@ƒCƒ‹–¼.
+; @param $file ç”Ÿæˆã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«å.
 ;
 Func CreateDataBase($file)
 	FileOpen($file, 2 + 8)
 EndFunc   ;==>CreateDataBase
 
 ;
-; ƒVƒŠƒAƒ‹ƒtƒ@ƒCƒ‹‚ğ¶¬‚·‚é.
+; ã‚·ãƒªã‚¢ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã™ã‚‹.
 ;
-; @param $crt_file Ø–¾‘.
-; @param $serial_file ¶¬‚·‚éƒVƒŠƒAƒ‹ƒtƒ@ƒCƒ‹–¼.
+; @param $crt_file è¨¼æ˜æ›¸.
+; @param $serial_file ç”Ÿæˆã™ã‚‹ã‚·ãƒªã‚¢ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«å.
 ;
 Func CreateSerialFile($crt_file, $serial_file)
 	Local $cmd = StringFormat("%s x509 -in %s -noout -next_serial -out %s", $OpenSSLCmd, $crt_file, $serial_file)

@@ -1,10 +1,9 @@
-#include-once
-#include "..\utility\Console.au3"
+ï»¿#include-once
 
 ;
-; == ƒIƒvƒVƒ‡ƒ“ ==
-; AutoExRuuner.au3 ‚ÌU‚é•‘‚¢‚ğ•ÏX‚·‚éê‡‚Í,
-; $AutoExRunnerConfig ƒOƒ[ƒoƒ‹•Ï” ‚É İ’èƒtƒ@ƒCƒ‹‚ğİ’è‚·‚é‚±‚Æ.
+; == ã‚ªãƒ—ã‚·ãƒ§ãƒ³ ==
+; AutoExRuuner.au3 ã®æŒ¯ã‚‹èˆã„ã‚’å¤‰æ›´ã™ã‚‹å ´åˆã¯,
+; $AutoExRunnerConfig ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•° ã« è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¨­å®šã™ã‚‹ã“ã¨.
 ;
 Global $AutoExRunnerConfig = ""
 
@@ -14,11 +13,11 @@ Const $AutoExRunnerSettingTag = "AutoExRunnerSetting"
 ; Pubilc Method
 ;===============================================================================
 ;
-; w’è‚µ‚½Excelƒtƒ@ƒCƒ‹‚ğ“Ç‚İ, w’è‚µ‚½ŠÖ”‚ğŒÄo‚·.
+; æŒ‡å®šã—ãŸExcelãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­è¾¼ã¿, æŒ‡å®šã—ãŸé–¢æ•°ã‚’å‘¼å‡ºã™.
 ;
-; @param $file “Ç‚ŞExcelƒtƒ@ƒCƒ‹–¼.
-; @param $sheet_name “Ç‚ŞExcelƒtƒ@ƒCƒ‹‚ÌƒV[ƒg–¼.
-; @param $callback_name ƒR[ƒ‹ƒoƒbƒN‚·‚éŠÖ”–¼.
+; @param $file èª­è¾¼ã‚€Excelãƒ•ã‚¡ã‚¤ãƒ«å.
+; @param $sheet_name èª­è¾¼ã‚€Excelãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚·ãƒ¼ãƒˆå.
+; @param $callback_name ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã™ã‚‹é–¢æ•°å.
 ;
 Func AutoExRunner($file, $sheet_name, $callback_name)
 	Local $excel = ObjGet($file)
@@ -45,12 +44,12 @@ Func AutoExRunner($file, $sheet_name, $callback_name)
 EndFunc   ;==>AutoExRunner
 
 ;
-; ƒZƒ‹‚ğæ“¾‚·‚é.
+; ã‚»ãƒ«ã‚’å–å¾—ã™ã‚‹.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
-; @param $key æ“¾‚µ‚½‚¢ƒZƒ‹‚Ì€–Ú–¼.
-; @return ƒZƒ‹.
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
+; @param $key å–å¾—ã—ãŸã„ã‚»ãƒ«ã®é …ç›®å.
+; @return ã‚»ãƒ«.
 ;
 Func GetCell($sheet, $line, $key)
 	Local $key_line = Int(IniRead($AutoExRunnerConfig, $AutoExRunnerSettingTag, "KeyLine", 2))
@@ -68,12 +67,12 @@ Func GetCell($sheet, $line, $key)
 EndFunc   ;==>GetCell
 
 ;
-; ƒZƒ‹‚Ì’l(•¶š—ñ)‚ğæ“¾‚·‚é.
+; ã‚»ãƒ«ã®å€¤(æ–‡å­—åˆ—)ã‚’å–å¾—ã™ã‚‹.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
-; @param $key æ“¾‚µ‚½‚¢ƒZƒ‹‚Ì€–Ú–¼.
-; @return ƒZƒ‹‚Ì’l(•¶š—ñ).
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
+; @param $key å–å¾—ã—ãŸã„ã‚»ãƒ«ã®é …ç›®å.
+; @return ã‚»ãƒ«ã®å€¤(æ–‡å­—åˆ—).
 ;
 Func GetString($sheet, $line, $key)
 	Local $value = ""
@@ -85,10 +84,10 @@ Func GetString($sheet, $line, $key)
 EndFunc   ;==>GetString
 
 ;
-; No ‚ğæ“¾‚·‚é.
+; No ã‚’å–å¾—ã™ã‚‹.
 ;
-; @param $sheet Às’†‚ÌƒV[ƒgƒIƒuƒWƒFƒNƒg.
-; @param $line Às’†‚Ìs.
+; @param $sheet å®Ÿè¡Œä¸­ã®ã‚·ãƒ¼ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+; @param $line å®Ÿè¡Œä¸­ã®è¡Œ.
 ; @return No.
 ;
 Func GetNo($sheet, $line)
@@ -101,10 +100,10 @@ EndFunc   ;==>GetNo
 ; Private Method
 ;===============================================================================
 ;
-; I’[‚©ƒ`ƒFƒbƒN‚·‚é.
+; çµ‚ç«¯ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹.
 ;
-; @param $value No‚Ì’l.
-; @return I’[‚Ì—L–³.
+; @param $value Noã®å€¤.
+; @return çµ‚ç«¯ã®æœ‰ç„¡.
 ;
 Func IsNoEnd($value)
 	Local $ret = False
