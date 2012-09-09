@@ -1,23 +1,30 @@
 ﻿#include "..\..\runner\AutoOpenOfficeRunner.au3"
+#include "..\..\utility\FileUtility.au3"
 #include "..\..\app\OpenSSL.au3"
 
-$OpenSSLCmd = @ScriptDir & "\..\..\bin\openssl.exe"
-$AutoOpenOfficeRuunerConfig = @ScriptDir & "\CertificateGenerator.ini"
+#region グローバル変数設定
+$OpenSSL_CmdPath = FileUtility_ScriptDirFilePath("..\..\bin\openssl.exe")
+$OpenSSL_DebugLog = 1
+$AutoOpenOfficeRuunerConfig = FileUtility_ScriptDirFilePath("CertificateGenerator.ini")
+#endregion グローバル変数設定
 
+#region 定数定義
 ;
 ; 出力フォルダ.
 ;
-Const $OutputDir = @ScriptDir & "\out"
+Const $OutputDir = FileUtility_ScriptDirFilePath("out")
 
 ;
 ; 入力ファイル.
 ;
-Const $InputFile = @ScriptDir & "\CertificateList.ods"
+Const $InputFile = FileUtility_ScriptDirFilePath("CertificateList.ods")
+#endregion 定数定義
 
+#region 静的変数定義
 ;
-; サブジェクト.
+; サブジェクトの設定書き換え用配列.
 ;
-Local $subject[8][2] = [ _
+Static $Subject[8][2] = [ _
 		["C", ""], _
 		["ST", ""], _
 		["L", ""], _
@@ -26,6 +33,7 @@ Local $subject[8][2] = [ _
 		["CN", ""], _
 		["emailAddress", ""] _
 		]
+#endregion 静的変数定義
 
 ;
 ; メイン関数呼び出し.
@@ -44,6 +52,7 @@ Func Main()
 	AutoOpenOfficeRunner($InputFile, "サーバ証明書", "CreateServerCrt")
 EndFunc   ;==>Main
 
+#region ルート証明書
 ;
 ; ルート証明書の生成処理.
 ;
@@ -51,9 +60,10 @@ EndFunc   ;==>Main
 ; @param $line 実行中の行.
 ;
 Func CreateRootCrt($sheet, $line)
-	InitSubject()
-	SetSubject($sheet, $line)
-	CreateRootCertificate( _
+	InitConfigurationArray($Subject)
+	SetConfigurationArray($sheet, $line, $Subject)
+
+	OpenSSL_CreateRootCertificate( _
 			GetString($sheet, $line, "名称"), _
 			GetString($sheet, $line, "鍵長"), _
 			GetString($sheet, $line, "メッセージダイジェスト"), _
@@ -68,9 +78,11 @@ EndFunc   ;==>CreateRootCrt
 ; @param $config 設定ファイル名.
 ;
 Func HookCreateRootCrt($config)
-	WriteSubject($config)
+	WriteConfigurationArray($Subject, "req_distinguished_name", $config)
 EndFunc   ;==>HookCreateRootCrt
+#endregion ルート証明書
 
+#region 中間証明書
 ;
 ; 中間証明書の生成処理.
 ;
@@ -78,9 +90,10 @@ EndFunc   ;==>HookCreateRootCrt
 ; @param $line 実行中の行.
 ;
 Func CreateIntermediateCrt($sheet, $line)
-	InitSubject()
-	SetSubject($sheet, $line)
-	CreateIntermediateCertificate( _
+	InitConfigurationArray($Subject)
+	SetConfigurationArray($sheet, $line, $Subject)
+
+	OpenSSL_CreateIntermediateCertificate( _
 			GetString($sheet, $line, "名称"), _
 			GetString($sheet, $line, "鍵長"), _
 			GetString($sheet, $line, "メッセージダイジェスト"), _
@@ -96,9 +109,11 @@ EndFunc   ;==>CreateIntermediateCrt
 ; @param $config 設定ファイル名.
 ;
 Func HookCreateIntermediateCrt($config)
-	WriteSubject($config)
+	WriteConfigurationArray($Subject, "req_distinguished_name", $config)
 EndFunc   ;==>HookCreateIntermediateCrt
+#endregion 中間証明書
 
+#region サーバ証明書
 ;
 ; サーバ証明書の生成処理.
 ;
@@ -106,9 +121,10 @@ EndFunc   ;==>HookCreateIntermediateCrt
 ; @param $line 実行中の行.
 ;
 Func CreateServerCrt($sheet, $line)
-	InitSubject()
-	SetSubject($sheet, $line)
-	CreateServerCertificate( _
+	InitConfigurationArray($Subject)
+	SetConfigurationArray($sheet, $line, $Subject)
+
+	OpenSSL_CreateServerCertificate( _
 			GetString($sheet, $line, "名称"), _
 			GetString($sheet, $line, "鍵長"), _
 			GetString($sheet, $line, "メッセージダイジェスト"), _
@@ -124,46 +140,53 @@ EndFunc   ;==>CreateServerCrt
 ; @param $config 設定ファイル名.
 ;
 Func HookCreateServerCrt($config)
-	WriteSubject($config)
+	WriteConfigurationArray($Subject, "req_distinguished_name", $config)
 EndFunc   ;==>HookCreateServerCrt
+#endregion サーバ証明書
 
+#region 設定ファイル書き換え
 ;
-; サブジェクトを初期化する.
+; 設定書き換え用の配列を初期化する.
 ;
-Func InitSubject()
-	Local $count = UBound($subject, 1)
+; @param $array 設定値配列.
+;
+Func InitConfigurationArray(ByRef $array)
+	Local $count = UBound($array, 1)
 	For $i = 0 To $count - 1
-		$subject[$i][1] = ""
+		$array[$i][1] = ""
 	Next
-EndFunc   ;==>InitSubject
+EndFunc   ;==>InitConfigurationArray
 
 ;
-; 入力ファイルから値を読込み, サブジェクトに設定する.
+; 入力ファイルから値を読込み, 設定書き換え用配列に設定する.
 ;
 ; @param $sheet 実行中のシートオブジェクト.
 ; @param $line 実行中の行.
+; @param $array 設定値配列.
 ;
-Func SetSubject($sheet, $line)
-	Local $count = UBound($subject, 1)
+Func SetConfigurationArray($sheet, $line, ByRef $array)
+	Local $count = UBound($array, 1)
 	For $i = 0 To $count - 1
-		Local $value = GetString($sheet, $line, $subject[$i][0])
-		If Not "" = $value Then
-			$subject[$i][1] = $value
+		Local $value = GetString($sheet, $line, $array[$i][0])
+		If "" <> $value Then
+			$array[$i][1] = $value
 		EndIf
 	Next
-EndFunc   ;==>SetSubject
+EndFunc   ;==>SetConfigurationArray
 
 ;
-; サブジェクトを設定ファイルに書き込む.
+; 設定書き換え用配列を設定ファイル(openssl.cnf)に書き込む.
 ;
+; @param $array 設定値配列.
+; @param $section 設定値を書き込むセクション.
 ; @param $config 設定ファイル名.
 ;
-Func WriteSubject($config)
-	Local $count = UBound($subject, 1)
+Func WriteConfigurationArray(ByRef $array, $section, $config)
+	Local $count = UBound($array, 1)
 	For $i = 0 To $count - 1
-		If Not "" = $subject[$i][1] Then
-			IniWrite($config, "req_distinguished_name", $subject[$i][0], $subject[$i][1])
+		If "" <> $array[$i][1] Then
+			IniWrite($config, $section, $array[$i][0], $array[$i][1])
 		EndIf
 	Next
-EndFunc   ;==>WriteSubject
-
+EndFunc   ;==>WriteConfigurationArray
+#endregion 設定ファイル書き換え

@@ -1,20 +1,50 @@
 ﻿#include-once
 #region パブリックメソッド
 ;
-; スペースが含まれるパスを有効化(ダブルクォートで囲む)する.
+; スペースが含まれるパスを, コマンドラインで利用出来る様にダブルクォートで囲む.
+; 戻り値のパスは, AutoIt API で利用出来ないため, 注意すること.
 ;
 ; @param $path パス.
+; @return ダブルクォートで囲まれたパス.
 ;
 Func FileUtility_PathSpaceEnable($path)
 	Return """" & $path & """"
 EndFunc   ;==>FileUtility_PathSpaceEnable
 
 ;
+; フォルダ名とファイル名を結合する.
+;
+; @param $dir フォルダ名.
+; @param $file ファイル名.
+; @return フォルダ名とファイル名を結合したパス.
+;
+Func FileUtility_MakePath($dir, $file)
+	Return $dir & "\" & $file
+EndFunc   ;==>FileUtility_MakePath
+
+;
 ; スクリプトフォルダにあるファイルのパスを取得する.
 ;
 ; @param $file ファイル名.
+; @return スクリプトフォルダにあるファイルのパス.
 ;
 Func FileUtility_ScriptDirFilePath($file)
-	Return FileUtility_PathSpaceEnable(@ScriptDir & "\" & $file)
+	Return FileUtility_MakePath(@ScriptDir, $file)
 EndFunc   ;==>FileUtility_ScriptDirFilePath
+
+;
+; 現在の作業フォルダを移動する.
+; 移動先のフォルダが無い場合は, フォルダを作成して移動する.
+;
+; @param $path 移動先フォルダ.
+; @return 移動前のフォルダ.
+;
+Func FileUtiilty_ChangeDir($path)
+	Local $before = @WorkingDir
+	If Not FileExists($path) Then
+		DirCreate($path)
+	EndIf
+	FileChangeDir($path)
+	Return $before
+EndFunc   ;==>FileUtiilty_ChangeDir
 #endregion パブリックメソッド
