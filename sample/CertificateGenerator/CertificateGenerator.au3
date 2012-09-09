@@ -2,28 +2,21 @@
 #include "..\..\utility\FileUtility.au3"
 #include "..\..\app\OpenSSL.au3"
 
-#region グローバル変数設定
+#region Globale_Argument_Define
 $OpenSSL_CmdPath = FileUtility_ScriptDirFilePath("..\..\bin\openssl.exe")
 $OpenSSL_DebugLog = 1
-$AutoOpenOfficeRuunerConfig = FileUtility_ScriptDirFilePath("CertificateGenerator.ini")
-#endregion グローバル変数設定
+$KeyColumnMaxCount = 15
+#endregion Globale_Argument_Define
 
-#region 定数定義
-;
+#region Constant_Define
 ; 出力フォルダ.
-;
 Const $OutputDir = FileUtility_ScriptDirFilePath("out")
-
-;
 ; 入力ファイル.
-;
 Const $InputFile = FileUtility_ScriptDirFilePath("CertificateList.ods")
-#endregion 定数定義
+#endregion Constant_Define
 
-#region 静的変数定義
-;
+#region Static_Argument_Define
 ; サブジェクトの設定書き換え用配列.
-;
 Static $Subject[8][2] = [ _
 		["C", ""], _
 		["ST", ""], _
@@ -33,7 +26,7 @@ Static $Subject[8][2] = [ _
 		["CN", ""], _
 		["emailAddress", ""] _
 		]
-#endregion 静的変数定義
+#endregion Static_Argument_Define
 
 ;
 ; メイン関数呼び出し.
@@ -52,7 +45,7 @@ Func Main()
 	AutoOpenOfficeRunner($InputFile, "サーバ証明書", "CreateServerCrt")
 EndFunc   ;==>Main
 
-#region ルート証明書
+#region Root_Certificate
 ;
 ; ルート証明書の生成処理.
 ;
@@ -61,13 +54,13 @@ EndFunc   ;==>Main
 ;
 Func CreateRootCrt($sheet, $line)
 	InitConfigurationArray($Subject)
-	SetConfigurationArray($sheet, $line, $Subject)
+	SetConfigurationArray($Subject)
 
 	OpenSSL_CreateRootCertificate( _
-			GetString($sheet, $line, "名称"), _
-			GetString($sheet, $line, "鍵長"), _
-			GetString($sheet, $line, "メッセージダイジェスト"), _
-			GetString($sheet, $line, "有効期限"), _
+			GetString("名称"), _
+			GetString("鍵長"), _
+			GetString("メッセージダイジェスト"), _
+			GetString("有効期限"), _
 			"HookCreateRootCrt" _
 			)
 EndFunc   ;==>CreateRootCrt
@@ -80,9 +73,9 @@ EndFunc   ;==>CreateRootCrt
 Func HookCreateRootCrt($config)
 	WriteConfigurationArray($Subject, "req_distinguished_name", $config)
 EndFunc   ;==>HookCreateRootCrt
-#endregion ルート証明書
+#endregion Root_Certificate
 
-#region 中間証明書
+#region Intermediate_Certificate
 ;
 ; 中間証明書の生成処理.
 ;
@@ -91,14 +84,14 @@ EndFunc   ;==>HookCreateRootCrt
 ;
 Func CreateIntermediateCrt($sheet, $line)
 	InitConfigurationArray($Subject)
-	SetConfigurationArray($sheet, $line, $Subject)
+	SetConfigurationArray($Subject)
 
 	OpenSSL_CreateIntermediateCertificate( _
-			GetString($sheet, $line, "名称"), _
-			GetString($sheet, $line, "鍵長"), _
-			GetString($sheet, $line, "メッセージダイジェスト"), _
-			GetString($sheet, $line, "有効期限"), _
-			StringRegExpReplace($OutputDir & "\" & GetString($sheet, $line, "認証局"), "\\", "/"), _
+			GetString("名称"), _
+			GetString("鍵長"), _
+			GetString("メッセージダイジェスト"), _
+			GetString("有効期限"), _
+			StringRegExpReplace($OutputDir & "\" & GetString("認証局"), "\\", "/"), _
 			"HookCreateIntermediateCrt" _
 			)
 EndFunc   ;==>CreateIntermediateCrt
@@ -111,9 +104,9 @@ EndFunc   ;==>CreateIntermediateCrt
 Func HookCreateIntermediateCrt($config)
 	WriteConfigurationArray($Subject, "req_distinguished_name", $config)
 EndFunc   ;==>HookCreateIntermediateCrt
-#endregion 中間証明書
+#endregion Intermediate_Certificate
 
-#region サーバ証明書
+#region Server_Certificate
 ;
 ; サーバ証明書の生成処理.
 ;
@@ -122,14 +115,14 @@ EndFunc   ;==>HookCreateIntermediateCrt
 ;
 Func CreateServerCrt($sheet, $line)
 	InitConfigurationArray($Subject)
-	SetConfigurationArray($sheet, $line, $Subject)
+	SetConfigurationArray($Subject)
 
 	OpenSSL_CreateServerCertificate( _
-			GetString($sheet, $line, "名称"), _
-			GetString($sheet, $line, "鍵長"), _
-			GetString($sheet, $line, "メッセージダイジェスト"), _
-			GetString($sheet, $line, "有効期限"), _
-			StringRegExpReplace($OutputDir & "\" & GetString($sheet, $line, "認証局"), "\\", "/"), _
+			GetString("名称"), _
+			GetString("鍵長"), _
+			GetString("メッセージダイジェスト"), _
+			GetString("有効期限"), _
+			StringRegExpReplace($OutputDir & "\" & GetString("認証局"), "\\", "/"), _
 			"HookCreateServerCrt" _
 			)
 EndFunc   ;==>CreateServerCrt
@@ -142,9 +135,9 @@ EndFunc   ;==>CreateServerCrt
 Func HookCreateServerCrt($config)
 	WriteConfigurationArray($Subject, "req_distinguished_name", $config)
 EndFunc   ;==>HookCreateServerCrt
-#endregion サーバ証明書
+#endregion Server_Certificate
 
-#region 設定ファイル書き換え
+#region Configuration
 ;
 ; 設定書き換え用の配列を初期化する.
 ;
@@ -164,10 +157,10 @@ EndFunc   ;==>InitConfigurationArray
 ; @param $line 実行中の行.
 ; @param $array 設定値配列.
 ;
-Func SetConfigurationArray($sheet, $line, ByRef $array)
+Func SetConfigurationArray(ByRef $array)
 	Local $count = UBound($array, 1)
 	For $i = 0 To $count - 1
-		Local $value = GetString($sheet, $line, $array[$i][0])
+		Local $value = GetString($array[$i][0])
 		If "" <> $value Then
 			$array[$i][1] = $value
 		EndIf
@@ -189,4 +182,4 @@ Func WriteConfigurationArray(ByRef $array, $section, $config)
 		EndIf
 	Next
 EndFunc   ;==>WriteConfigurationArray
-#endregion 設定ファイル書き換え
+#endregion Configuration

@@ -47,4 +47,15 @@ Func FileUtiilty_ChangeDir($path)
 	FileChangeDir($path)
 	Return $before
 EndFunc   ;==>FileUtiilty_ChangeDir
+
+;
+; パスをURLに変換する.
+;
+; @param $path パス.
+; @return  URL.
+;
+Func FileUtiilty_PathToUrl($path)
+	Local $ret = "file:///" & StringRegExpReplace(StringRegExpReplace($path, """", ""), "\\", "/")
+	Return $ret
+EndFunc   ;==>FileUtiilty_PathToUrl
 #endregion パブリックメソッド

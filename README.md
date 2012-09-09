@@ -11,7 +11,10 @@ AutoExRunner は、 Excel もしくは OpenOffice に入力されたデータを
 AutoExRunner を実行するためには、以下のソフトウェアをインストールして下さい。
 
 1. [AutoIt v3](http://www.autoitscript.com/site/autoit/downloads/)
-2. Microsoft Excel もしくは [Apache OpenOffice](http://www.openoffice.org/ja/)
+2. 次の何れかのソフトウェアをインストールする。
+  - Microsoft Excel
+  - [Apache OpenOffice](http://www.openoffice.org/ja/)
+  - [Libre Office](http://ja.libreoffice.org/home/)
 
 
 使用方法
@@ -25,3 +28,9 @@ AutoExRunnerTest.au3 を参照して下さい。
 
 このプロダクトは、OpenSSLツールキットを利用するために、OpenSSLプロジェクトによって開発されたソフトウェアを含みます。
 (This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit)」
+
+
+既知の問題
+----------
+### OpenOfficeCalc.au3
+- 稀に "予期しないエラーが発生し、LibreOfficeがクラッシュしました" が発生する。
