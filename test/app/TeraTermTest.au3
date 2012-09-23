@@ -1,51 +1,52 @@
-﻿#include "..\..\app\TeraTerm.au3"
-#include "..\..\utility\ConsoleUtility.au3"
+﻿#include "..\AutoItTest.au3"
+#include "..\..\app\TeraTerm.au3"
 #include "..\..\utility\FileUtility.au3"
 
-#region グローバル変数の設定
-$TeraTerm_CmdPath = "C:\usr\local\teraterm-4.74\ttermpro.exe"
+#region Globale_Argument_Setting
 $TeraTerm_MacroCmdPath = "C:\usr\local\teraterm-4.74\ttpmacro.exe"
-$TeraTerm_DebugLog = 1
-#endregion グローバル変数の設定
+$TeraTerm_DebugLog = 0
+#endregion Globale_Argument_Setting
 
-TestMain()
+Local $TeraTermTest[2][5] = [ _
+		["", "TeraTerm_MacroRun_Test", "AutoItTest_Assert", True, ""], _
+		["", "TeraTerm_MacroRunWait_Test", "AutoItTest_Assert", True, ""] _
+		]
 
-#region テストコード
-Func TestMain()
-	ConsoleUtility_WriteLn(TeraTerm_MacroRun_Test())
-	ConsoleUtility_WriteLn(TeraTerm_MacroRunWait_Test())
-EndFunc   ;==>TestMain
+AutoItTest_Runner($TeraTermTest)
 
+#region TeraTerm_MacroRun_Test
 ;
 ; TeraTerm_MacroRun() テスト.
 ;
 Func TeraTerm_MacroRun_Test()
-	Local $result = "NG"
+	Local $result = False
 	Local $time = TimerInit()
 
 	Local $ttl = FileUtility_ScriptDirFilePath("test.ttl")
 	TeraTerm_MacroRun($ttl)
 	TeraTerm_MacroWaitClose()
 
-	If Ceiling(TimerDiff($time) / 1000) > 5 Then
-		$result = "OK"
+	If 5 < Ceiling(TimerDiff($time) / 1000)  Then
+		$result = True
 	EndIf
 	Return $result
 EndFunc   ;==>TeraTerm_MacroRun_Test
+#endregion
 
+#region TeraTerm_MacroRunWait_Test
 ;
 ; TeraTerm_MacroRunWait() テスト.
 ;
 Func TeraTerm_MacroRunWait_Test()
-	Local $result = "NG"
+	Local $result = False
 	Local $time = TimerInit()
 
 	Local $ttl = FileUtility_ScriptDirFilePath("test.ttl")
 	TeraTerm_MacroRunWait($ttl)
 
-	If Ceiling(TimerDiff($time) / 1000) > 5 Then
-		$result = "OK"
+	If 5 < Ceiling(TimerDiff($time) / 1000) Then
+		$result = True
 	EndIf
 	Return $result
 EndFunc   ;==>TeraTerm_MacroRunWait_Test
-#endregion テストコード
+#endregion Test

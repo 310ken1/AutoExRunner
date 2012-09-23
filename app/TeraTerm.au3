@@ -1,30 +1,28 @@
 ﻿#include-once
 #include "..\utility\ConsoleUtility.au3"
 
-#region グローバル変数定義
+#region Globale_Argument_Define
 ;
 ; !! 必須 !!
 ; 本ソースコード上で定義されたメソッドを利用する場合は,
-; $TeraTerm_CmdPath グローバル変数 に ttermpro.exe へのパスを設定する,
-; もしくは, $TeraTerm_MacroCmdPath グローバル変数 に ttpmacro.exe へのパスを設定すること.
-; どちらのグローバル変数を設定するかは, 実行する関数によって異なる.
+; $TeraTerm_MacroCmdPath グローバル変数 に ttpmacro.exe へのパスを設定すること.
 ;
-Global $TeraTerm_CmdPath = "C:\usr\local\teraterm-4.74\ttermpro.exe"
-Global $TeraTerm_MacroCmdPath = "C:\usr\local\teraterm-4.74\ttpmacro.exe"
-
+Global $TeraTerm_MacroCmdPath = "ttpmacro.exe"
 ;
 ; デバッグログフラグ.
 ; 1 を指定することで, デバッグログが出力される.
 ;
 Global $TeraTerm_DebugLog = 0
-#endregion グローバル変数定義
+#endregion Globale_Argument_Define
 
-#region 定数定義
+#region Constant_Define
+; TeraTermのクラス名.
 Const $TeraTerm_Class = "[CLASS:VTWin32]"
+; Macro実行ダイアログのウィンドウ名(接頭文字列).
 Const $TeraTerm_MacroTitle = "MACRO - "
-#endregion 定数定義
+#endregion Constant_Define
 
-#region パブリックメソッド
+#region Public_Method
 ;
 ; TeraTerm ウィンドウを閉じる.
 ;
@@ -64,4 +62,4 @@ EndFunc   ;==>TeraTerm_MacroRunWait
 Func TeraTerm_MacroWaitClose()
 	WinWaitClose($TeraTerm_MacroTitle)
 EndFunc   ;==>TeraTerm_MacroWaitClose
-#endregion パブリックメソッド
+#endregion Public_Method
