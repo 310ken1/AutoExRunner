@@ -1,5 +1,7 @@
 ﻿#include-once
-#region パブリックメソッド
+#include <File.au3>
+
+#region Public_Method
 ;
 ; スペースが含まれるパスを, コマンドラインで利用出来る様にダブルクォートで囲む.
 ; 戻り値のパスは, AutoIt API で利用出来ないため, 注意すること.
@@ -33,6 +35,16 @@ Func FileUtility_ScriptDirFilePath($file)
 EndFunc   ;==>FileUtility_ScriptDirFilePath
 
 ;
+; テンポラリーファイルフォルダにあるファイルのパスを取得する.
+;
+; @param $file ファイル名.
+; @return テンポラリーファイルフォルダにあるファイルのパス.
+;
+Func FileUtility_TempDirFilePath($file)
+	Return FileUtility_MakePath(@TempDir, $file)
+EndFunc   ;==>FileUtility_TempDirFilePath
+
+;
 ; 現在の作業フォルダを移動する.
 ; 移動先のフォルダが無い場合は, フォルダを作成して移動する.
 ;
@@ -58,4 +70,16 @@ Func FileUtiilty_PathToUrl($path)
 	Local $ret = "file:///" & StringRegExpReplace(StringRegExpReplace($path, """", ""), "\\", "/")
 	Return $ret
 EndFunc   ;==>FileUtiilty_PathToUrl
-#endregion パブリックメソッド
+
+;
+; フルパスからファイル名を取得する.
+;
+; @param $fullpath フォルダ名.
+; @return ファイル名.
+;
+Func FileUtility_FileBaseName($fullpath)
+	Local $drive, $dir, $file, $ext
+	_PathSplit($fullpath, $drive, $dir, $file, $ext)
+	Return $file & $ext
+EndFunc   ;==>FileUtility_FileBaseName
+#endregion Public_Method
