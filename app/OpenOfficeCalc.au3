@@ -24,11 +24,11 @@ Static Local $OpenOfficeCalc_Sheet = 0
 ; OpenOffice  Calc が サポートするファイルを開く.
 ; 存在しないファイルを指定した場合は, ファイルが作成される.
 ;
-; @param $file 開くファイル名.
+; @param $file 開くファイル名(フルパスで指定する必要がある).
 ; @param $property ファイルを開く時の属性の配列.
 ; @return ドキュメントオブジェクト.
 ;
-Func OpenOfficeCalc_Open($file, $property = 0)
+Func OpenOfficeCalc_Open(Const ByRef $file, $property = 0)
 	Local $document = 0
 
 	Local $url = ""
@@ -47,6 +47,7 @@ Func OpenOfficeCalc_Open($file, $property = 0)
 		Local $desktop = $manager.createInstance($OpenOfficeCalc_Desktop)
 		If Not @error Then
 			$document = $desktop.loadComponentFromURL($url, "_default", 0, $property)
+			WinWaitActive("[CLASS:SALFRAME]")
 			If Not FileExists($file) Then
 				$document.storeAsURL(FileUtiilty_PathToUrl($file), $array)
 			EndIf
@@ -75,13 +76,36 @@ Func OpenOfficeCalc_Close($document = $OpenOfficeCalc_Document)
 EndFunc   ;==>OpenOfficeCalc_Close
 
 ;
+; ファイルを保存する.
+; 引数に何も指定しない場合は, 上書き保存する.
+;
+; @param $file 保存するファイル名(フルパスで指定する必要がある).
+; @param $property ファイルを開く時の属性の配列.
+; @param $document ドキュメントオブジェクト(OpenOfficeCalc_Open関数の戻り値)を指定する.
+;
+Func OpenOfficeCalc_Save($file = 0, $property = 0, $document = $OpenOfficeCalc_Document)
+	Local $array[1]
+	If Not IsArray($property) Then
+		$property = $array
+	EndIf
+	If IsObj($document) Then
+		If IsString($file) Then
+			FileDelete($file)
+			$document.storeAsURL(FileUtiilty_PathToUrl($file), $property)
+		Else
+			$document.store()
+		EndIf
+	EndIf
+EndFunc   ;==>OpenOfficeCalc_Save
+
+;
 ; シートオブジェクトを取得する.
 ;
 ; @param $sheet_name シート名.
 ; @param $document  ドキュメントオブジェクト.
 ; @return シートオブジェクト.
 ;
-Func OpenOfficeCalc_GetSheet($sheet_name, $document = $OpenOfficeCalc_Document)
+Func OpenOfficeCalc_GetSheet(Const ByRef $sheet_name, $document = $OpenOfficeCalc_Document)
 	Local $sheet = 0
 	If IsObj($document) Then
 		Local $sheets = $document.getSheets()
@@ -109,6 +133,24 @@ Func OpenOfficeCalc_GetCell($row, $column, $sheet = $OpenOfficeCalc_Sheet)
 	EndIf
 	Return $cell
 EndFunc   ;==>OpenOfficeCalc_GetCell
+
+;
+; 範囲オブジェクトを取得する.
+;
+; @param $start_row 行の開始位置.
+; @param $start_column 列の開始位置.
+; @param $end_row 行の終了位置.
+; @param $end_column 列の終了位置.
+; @param $sheet  シートオブジェクト.
+; @return 範囲オブジェクト.
+;
+Func OpenOfficeCalc_GetRange($start_row, $start_column, $end_row, $end_column, $sheet = $OpenOfficeCalc_Sheet)
+	Local $range = 0
+	If IsObj($sheet) And - 1 < $start_row And - 1 < $start_column And - 1 < $end_row And - 1 < $end_column Then
+		$range = $sheet.getCellRangeByPosition($start_column, $start_row, $end_column, $end_row)
+	EndIf
+	Return $range
+EndFunc   ;==>OpenOfficeCalc_GetRange
 
 ;
 ; プロパティを設定する.

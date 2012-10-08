@@ -21,13 +21,14 @@ Global $AutoItTest_DebugLog = 0
 ;                          テスト後関数]
 ;
 Func AutoItTest_Runner(ByRef $array)
-	Local $count = UBound($array)
-	For $i = 0 To $count - 1
-		Local $before = $array[$i][0]
-		Local $test = $array[$i][1]
-		Local $judge = $array[$i][2]
-		Local $expected = $array[$i][3]
-		Local $after = $array[$i][4]
+	Local $ok = 0
+	Local $count = 0
+	For $count = 0 To UBound($array) - 1
+		Local $before = $array[$count][0]
+		Local $test = $array[$count][1]
+		Local $judge = $array[$count][2]
+		Local $expected = $array[$count][3]
+		Local $after = $array[$count][4]
 
 		Call($before)
 		Local $actual = Call($test)
@@ -37,9 +38,11 @@ Func AutoItTest_Runner(ByRef $array)
 		Local $result = "NG"
 		If True = $ret Then
 			$result = "OK"
+			$ok +=1
 		EndIf
 		ConsoleUtility_WriteLn($test & " : " & $result)
 	Next
+	ConsoleUtility_WriteLn("Total:" & $count & "  OK:" & $ok & "  NG:" & $count - $ok)
 EndFunc   ;==>AutoItTest_Runner
 
 ;
@@ -61,6 +64,30 @@ Func AutoItTest_Assert($expected, $actual, $error = 0, $extended = 0)
 EndFunc   ;==>AutoItTest_Assert
 
 ;
+; 期待する値と一致するか判定する.
+;
+; @param $expected 期待する値.
+; @param $actual 実際の値.
+; @param $error @errorの値(未使用).
+; @param $extended @extendedの値(未使用).
+; @return 成否(True/False)
+;
+Func AutoItTest_AssertArrayEquals(Const $expected, Const $actual, $error = 0, $extended = 0)
+	Local $result = False
+	If UBound($expected) = UBound($actual) Then
+		$result = True
+		For $i = 0 To UBound($expected) - 1
+			If $expected[$i] <> $actual[$i] Then
+				$result = False
+				ExitLoop
+			EndIf
+		Next
+	EndIf
+	ConsoleUtility_DebugLogLn($AutoItTest_DebugLog, "AutoItTest_AssertArrayEquals : " & $result)
+	Return $result
+EndFunc   ;==>AutoItTest_AssertArrayEquals
+
+;
 ; オブジェクトが生成されているか判定する.
 ;
 ; @param $expected 期待する値.
@@ -75,6 +102,24 @@ Func AutoItTest_IsObj($expected, $actual, $error = 0, $extended = 0)
 		$result = True
 	EndIf
 	ConsoleUtility_DebugLogLn($AutoItTest_DebugLog, "AutoItTest_IsObj : " & $result)
+	Return $result
+EndFunc   ;==>AutoItTest_IsObj
+
+;
+; 配列か判定する.
+;
+; @param $expected 期待する値.
+; @param $actual 実際の値.
+; @param $error @errorの値(未使用).
+; @param $extended @extendedの値(未使用).
+; @return 成否(True/False)
+;
+Func AutoItTest_IsArray($expected, $actual, $error = 0, $extended = 0)
+	Local $result = False
+	If $expected = IsArray($actual) Then
+		$result = True
+	EndIf
+	ConsoleUtility_DebugLogLn($AutoItTest_DebugLog, "AutoItTest_IsArray : " & $result)
 	Return $result
 EndFunc   ;==>AutoItTest_IsObj
 
@@ -112,7 +157,7 @@ Func AutoItTest_FileNotExists($expected, $actual, $error = 0, $extended = 0)
 	EndIf
 	ConsoleUtility_DebugLogLn($AutoItTest_DebugLog, "AutoItTest_FileNotExists : " & $result)
 	Return $result
-EndFunc   ;==>AutoItTest_FileExists
+EndFunc   ;==>AutoItTest_FileNotExists
 
 ;
 ; ウィンドウが存在することを判定する.

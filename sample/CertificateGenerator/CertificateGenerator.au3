@@ -5,7 +5,7 @@
 #region Globale_Argument_Define
 $OpenSSL_CmdPath = FileUtility_ScriptDirFilePath("..\..\bin\openssl.exe")
 $OpenSSL_DebugLog = 1
-$KeyColumnMaxCount = 15
+$AutoOpenOfficeRunner_KeyColumnMaxCount = 15
 #endregion Globale_Argument_Define
 
 #region Constant_Define
@@ -17,7 +17,7 @@ Const $InputFile = FileUtility_ScriptDirFilePath("CertificateList.ods")
 
 #region Static_Argument_Define
 ; サブジェクトの設定書き換え用配列.
-Static $Subject[8][2] = [ _
+Static $Subject[7][2] = [ _
 		["C", ""], _
 		["ST", ""], _
 		["L", ""], _
@@ -40,27 +40,31 @@ Func Main()
 	DirCreate($OutputDir)
 	FileChangeDir($OutputDir)
 
-	AutoOpenOfficeRunner($InputFile, "ルート証明書", "CreateRootCrt")
-	AutoOpenOfficeRunner($InputFile, "中間証明書", "CreateIntermediateCrt")
-	AutoOpenOfficeRunner($InputFile, "サーバ証明書", "CreateServerCrt")
+	Local $handle = AutoOpenOfficeRunner_Open($InputFile)
+	If IsArray($handle) Then
+		AutoOpenOfficeRunner_Run($handle, "ルート証明書", "CreateRootCrt")
+		AutoOpenOfficeRunner_Run($handle, "中間証明書", "CreateIntermediateCrt")
+		AutoOpenOfficeRunner_Run($handle, "サーバ証明書", "CreateServerCrt")
+
+		AutoOpenOfficeRunner_Close($handle)
+	EndIf
 EndFunc   ;==>Main
 
 #region Root_Certificate
 ;
 ; ルート証明書の生成処理.
 ;
-; @param $sheet 実行中のシートオブジェクト.
-; @param $line 実行中の行.
+; @param $handle ハンドル.
 ;
-Func CreateRootCrt($sheet, $line)
+Func CreateRootCrt(Const $handle)
 	InitConfigurationArray($Subject)
-	SetConfigurationArray($Subject)
+	SetConfigurationArray($handle, $Subject)
 
 	OpenSSL_CreateRootCertificate( _
-			GetString("名称"), _
-			GetString("鍵長"), _
-			GetString("メッセージダイジェスト"), _
-			GetString("有効期限"), _
+			AutoOpenOfficeRunner_GetString($handle, "名称"), _
+			AutoOpenOfficeRunner_GetString($handle, "鍵長"), _
+			AutoOpenOfficeRunner_GetString($handle, "メッセージダイジェスト"), _
+			AutoOpenOfficeRunner_GetString($handle, "有効期限"), _
 			"HookCreateRootCrt" _
 			)
 EndFunc   ;==>CreateRootCrt
@@ -79,19 +83,18 @@ EndFunc   ;==>HookCreateRootCrt
 ;
 ; 中間証明書の生成処理.
 ;
-; @param $sheet 実行中のシートオブジェクト.
-; @param $line 実行中の行.
+; @param $handle ハンドル.
 ;
-Func CreateIntermediateCrt($sheet, $line)
+Func CreateIntermediateCrt(Const $handle)
 	InitConfigurationArray($Subject)
-	SetConfigurationArray($Subject)
+	SetConfigurationArray($handle, $Subject)
 
 	OpenSSL_CreateIntermediateCertificate( _
-			GetString("名称"), _
-			GetString("鍵長"), _
-			GetString("メッセージダイジェスト"), _
-			GetString("有効期限"), _
-			StringRegExpReplace($OutputDir & "\" & GetString("認証局"), "\\", "/"), _
+			AutoOpenOfficeRunner_GetString($handle, "名称"), _
+			AutoOpenOfficeRunner_GetString($handle, "鍵長"), _
+			AutoOpenOfficeRunner_GetString($handle, "メッセージダイジェスト"), _
+			AutoOpenOfficeRunner_GetString($handle, "有効期限"), _
+			StringRegExpReplace($OutputDir & "\" & AutoOpenOfficeRunner_GetString($handle, "認証局"), "\\", "/"), _
 			"HookCreateIntermediateCrt" _
 			)
 EndFunc   ;==>CreateIntermediateCrt
@@ -110,19 +113,18 @@ EndFunc   ;==>HookCreateIntermediateCrt
 ;
 ; サーバ証明書の生成処理.
 ;
-; @param $sheet 実行中のシートオブジェクト.
-; @param $line 実行中の行.
+; @param $handle ハンドル.
 ;
-Func CreateServerCrt($sheet, $line)
+Func CreateServerCrt(Const $handle)
 	InitConfigurationArray($Subject)
-	SetConfigurationArray($Subject)
+	SetConfigurationArray($handle, $Subject)
 
 	OpenSSL_CreateServerCertificate( _
-			GetString("名称"), _
-			GetString("鍵長"), _
-			GetString("メッセージダイジェスト"), _
-			GetString("有効期限"), _
-			StringRegExpReplace($OutputDir & "\" & GetString("認証局"), "\\", "/"), _
+			AutoOpenOfficeRunner_GetString($handle, "名称"), _
+			AutoOpenOfficeRunner_GetString($handle, "鍵長"), _
+			AutoOpenOfficeRunner_GetString($handle, "メッセージダイジェスト"), _
+			AutoOpenOfficeRunner_GetString($handle, "有効期限"), _
+			StringRegExpReplace($OutputDir & "\" & AutoOpenOfficeRunner_GetString($handle, "認証局"), "\\", "/"), _
 			"HookCreateServerCrt" _
 			)
 EndFunc   ;==>CreateServerCrt
@@ -153,14 +155,13 @@ EndFunc   ;==>InitConfigurationArray
 ;
 ; 入力ファイルから値を読込み, 設定書き換え用配列に設定する.
 ;
-; @param $sheet 実行中のシートオブジェクト.
-; @param $line 実行中の行.
+; @param $handle ハンドル.
 ; @param $array 設定値配列.
 ;
-Func SetConfigurationArray(ByRef $array)
+Func SetConfigurationArray(Const ByRef $handle, ByRef $array)
 	Local $count = UBound($array, 1)
 	For $i = 0 To $count - 1
-		Local $value = GetString($array[$i][0])
+		Local $value = AutoOpenOfficeRunner_GetString($handle, $array[$i][0])
 		If "" <> $value Then
 			$array[$i][1] = $value
 		EndIf
