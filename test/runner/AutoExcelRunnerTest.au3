@@ -91,9 +91,9 @@ Func AutoExcelRunnerTest_Before()
 	FileDelete($AutoExcelRunnerTestTempFile)
 EndFunc   ;==>AutoExcelRunnerTest_Before
 ; コールバック関数.
-Func CallBackFunc(Const $handle)
+Func AutoExcelRunnerTest_CallBackFunc(Const $handle)
 	$AutoExcelRunnerCount += 1
-EndFunc   ;==>CallBackFunc
+EndFunc   ;==>AutoExcelRunnerTest_CallBackFunc
 ; セル配列が一致するか判定する.
 Func AutoExcelRunner_AssertCellArrayEquals($expected, $actual, $error = 0, $extended = 0)
 	Local $result = True
@@ -135,20 +135,23 @@ EndFunc   ;==>AutoExcelRunner_Open_Test_MultipleOpen_same
 ; 期待する結果: コールバック関数が45回実行される.
 Func AutoExcelRunner_Run_Test_Count()
 	Local $hd = AutoExcelRunner_Open($AutoExcelRunnerTestFile1)
-	AutoExcelRunner_Run($hd, $AutoExcelRunnerTestSheetName, "CallBackFunc")
+	AutoExcelRunner_Run($hd, $AutoExcelRunnerTestSheetName, _
+			"AutoExcelRunnerTest_CallBackFunc")
 	AutoExcelRunner_Close($hd)
 	Return $AutoExcelRunnerCount
 EndFunc   ;==>AutoExcelRunner_Run_Test_Count
 ; 無効なハンドルを指定した場合.
 ; 期待する結果: 戻り値としてFalseを返す.
 Func AutoExcelRunner_Run_Test_InvalidHandle()
-	Return AutoExcelRunner_Run(0, $AutoExcelRunnerTestSheetName, "CallBackFunc")
+	Return AutoExcelRunner_Run(0, $AutoExcelRunnerTestSheetName, _
+			"AutoExcelRunnerTest_CallBackFunc")
 EndFunc   ;==>AutoExcelRunner_Run_Test_InvalidHandle
 ; 無効なシート名を指定した場合.
 ; 期待する結果: 戻り値としてFalseを返す.
 Func AutoExcelRunner_Run_Test_InvalidSheetName()
 	Local $hd = AutoExcelRunner_Open($AutoExcelRunnerTestFile1)
-	Local $result = AutoExcelRunner_Run($hd, $AutoExcelRunnerTestInvalidSheetName, "CallBackFunc")
+	Local $result = AutoExcelRunner_Run($hd, $AutoExcelRunnerTestInvalidSheetName, _
+			"AutoExcelRunnerTest_CallBackFunc")
 	AutoExcelRunner_Close($hd)
 	Return $result
 EndFunc   ;==>AutoExcelRunner_Run_Test_InvalidSheetName
@@ -156,7 +159,8 @@ EndFunc   ;==>AutoExcelRunner_Run_Test_InvalidSheetName
 ; 期待する結果: 戻り値としてFalseを返す.
 Func AutoExcelRunner_Run_Test_InvalidCallback()
 	Local $hd = AutoExcelRunner_Open($AutoExcelRunnerTestFile1)
-	Local $result = AutoExcelRunner_Run($hd, $AutoExcelRunnerTestInvalidSheetName, "CallBackFunc1")
+	Local $result = AutoExcelRunner_Run($hd, $AutoExcelRunnerTestInvalidSheetName, _
+			"AutoExcelRunnerTest_CallBackFunc1")
 	AutoExcelRunner_Close($hd)
 	Return $result
 EndFunc   ;==>AutoExcelRunner_Run_Test_InvalidCallback

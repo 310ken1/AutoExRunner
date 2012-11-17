@@ -35,7 +35,6 @@ Global Enum _
 ; @param $sheet_name 読込むOpenOffice Calcファイルのシート名.
 ; @param $callback コールバックする関数名.
 ; @param $save OpenOffice Calcファイルの保存有無.
-; @return ドキュメントオブジェクト.
 ;
 Func AutoOpenOfficeRunner(Const ByRef $file, Const ByRef $sheet_name, Const ByRef $callback, Const $save = False)
 	Local $handle = AutoOpenOfficeRunner_Open($file)
@@ -130,8 +129,8 @@ EndFunc   ;==>AutoOpenOfficeRunner_Close
 Func AutoOpenOfficeRunner_GetCell(Const ByRef $handle, Const ByRef $key)
 	Local $cell = 0
 	If IsArray($handle) Then
-		Local $column = _ArraySearch($handle[$AutoOpenOfficeRunnerKeyCash], $key, 0, 0,0,0,1,0)
-		If -1 < $column Then
+		Local $column = _ArraySearch($handle[$AutoOpenOfficeRunnerKeyCash], $key, 0, 0, 0, 0, 1, 0)
+		If - 1 < $column Then
 			$cell = OpenOfficeCalc_GetCell( _
 					$handle[$AutoOpenOfficeRunnerLine], _
 					$column + $AutoOpenOfficeRunner_KeyStartColumn, _
@@ -147,11 +146,12 @@ EndFunc   ;==>AutoOpenOfficeRunner_GetCell
 ;
 ; @param $handle ハンドル.
 ; @param $key 取得したいセルの項目名.
+; @return 値(文字列).
 ;
 Func AutoOpenOfficeRunner_GetString(Const ByRef $handle, Const ByRef $key)
 	Local $string = ""
 	If IsArray($handle) Then
-		Local $index = _ArraySearch($handle[$AutoOpenOfficeRunnerKeyCash], $key, 0, 0,0,0,1,0)
+		Local $index = _ArraySearch($handle[$AutoOpenOfficeRunnerKeyCash], $key, 0, 0, 0, 0, 1, 0)
 		If - 1 < $index Then
 			Local $value = $handle[$AutoOpenOfficeRunnerValueArray]
 			$string = $value[$index]
@@ -182,7 +182,7 @@ EndFunc   ;==>AutoOpenOfficeRunner_IsNoEnd
 ; @return 項目名(キー)と列の要素を持つ２次元配列.
 ;
 Func AutoOpenOfficeRunner_CreateKeyArray(Const ByRef $sheet_object)
-	Local $array[$AutoOpenOfficeRunner_KeyColumnMaxCount+1][2]
+	Local $array[$AutoOpenOfficeRunner_KeyColumnMaxCount + 1][2]
 	Local $range = OpenOfficeCalc_GetRange( _
 			$AutoOpenOfficeRunner_KeyStartLine, _
 			$AutoOpenOfficeRunner_KeyStartColumn, _

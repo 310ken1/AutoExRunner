@@ -90,9 +90,9 @@ Func AutoOpenOfficeRunnerTest_Before()
 	FileDelete($AutoOpenOfficeRunnerTestTempFile)
 EndFunc   ;==>AutoOpenOfficeRunnerTest_Before
 ; コールバック関数.
-Func CallBackFunc(Const $handle)
+Func AutoOpenOfficeRunnerTest_CallBackFunc(Const $handle)
 	$AutoOpenOfficeRunnerCount += 1
-EndFunc   ;==>CallBackFunc
+EndFunc   ;==>AutoOpenOfficeRunnerTest_CallBackFunc
 ; セル配列が一致するか判定する.
 Func AutoOpenOfficeRunner_AssertCellArrayEquals($expected, $actual, $error = 0, $extended = 0)
 	Local $result = True
@@ -133,20 +133,23 @@ EndFunc   ;==>AutoOpenOfficeRunner_Open_Test_MultipleOpen_same
 ; 期待する結果: コールバック関数が45回実行される.
 Func AutoOpenOfficeRunner_Run_Test_Count()
 	Local $hd = AutoOpenOfficeRunner_Open($AutoOpenOfficeRunnerTestFile1)
-	AutoOpenOfficeRunner_Run($hd, $AutoOpenOfficeRunnerTestSheetName, "CallBackFunc")
+	AutoOpenOfficeRunner_Run($hd, $AutoOpenOfficeRunnerTestSheetName, _
+			"AutoOpenOfficeRunnerTest_CallBackFunc")
 	AutoOpenOfficeRunner_Close($hd)
 	Return $AutoOpenOfficeRunnerCount
 EndFunc   ;==>AutoOpenOfficeRunner_Run_Test_Count
 ; 無効なハンドルを指定した場合.
 ; 期待する結果: 戻り値としてFalseを返す.
 Func AutoOpenOfficeRunner_Run_Test_InvalidHandle()
-	Return AutoOpenOfficeRunner_Run(0, $AutoOpenOfficeRunnerTestSheetName, "CallBackFunc")
+	Return AutoOpenOfficeRunner_Run(0, $AutoOpenOfficeRunnerTestSheetName, _
+			"AutoOpenOfficeRunnerTest_CallBackFunc")
 EndFunc   ;==>AutoOpenOfficeRunner_Run_Test_InvalidHandle
 ; 無効なシート名を指定した場合.
 ; 期待する結果: 戻り値としてFalseを返す.
 Func AutoOpenOfficeRunner_Run_Test_InvalidSheetName()
 	Local $hd = AutoOpenOfficeRunner_Open($AutoOpenOfficeRunnerTestFile1)
-	Local $result = AutoOpenOfficeRunner_Run($hd, $AutoOpenOfficeRunnerTestInvalidSheetName, "CallBackFunc")
+	Local $result = AutoOpenOfficeRunner_Run($hd, $AutoOpenOfficeRunnerTestInvalidSheetName, _
+			"AutoOpenOfficeRunnerTest_CallBackFunc")
 	AutoOpenOfficeRunner_Close($hd)
 	Return $result
 EndFunc   ;==>AutoOpenOfficeRunner_Run_Test_InvalidSheetName
@@ -154,7 +157,8 @@ EndFunc   ;==>AutoOpenOfficeRunner_Run_Test_InvalidSheetName
 ; 期待する結果: 戻り値としてFalseを返す.
 Func AutoOpenOfficeRunner_Run_Test_InvalidCallback()
 	Local $hd = AutoOpenOfficeRunner_Open($AutoOpenOfficeRunnerTestFile1)
-	Local $result = AutoOpenOfficeRunner_Run($hd, $AutoOpenOfficeRunnerTestInvalidSheetName, "CallBackFunc1")
+	Local $result = AutoOpenOfficeRunner_Run($hd, $AutoOpenOfficeRunnerTestInvalidSheetName, _
+			"AutoOpenOfficeRunnerTest_CallBackFunc1")
 	AutoOpenOfficeRunner_Close($hd)
 	Return $result
 EndFunc   ;==>AutoOpenOfficeRunner_Run_Test_InvalidCallback
