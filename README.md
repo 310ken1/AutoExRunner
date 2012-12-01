@@ -1,4 +1,4 @@
-AutoExRunner
+﻿AutoExRunner
 =============
 
 概要
@@ -28,9 +28,3 @@ AutoExRunnerTest.au3 を参照して下さい。
 
 このプロダクトは、OpenSSLツールキットを利用するために、OpenSSLプロジェクトによって開発されたソフトウェアを含みます。
 (This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit)」
-
-
-既知の問題
-----------
-### OpenOfficeCalc.au3
-- 稀に "予期しないエラーが発生し、LibreOfficeがクラッシュしました" が発生する。
