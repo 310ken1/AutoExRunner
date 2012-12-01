@@ -1,9 +1,9 @@
-﻿#include "..\..\runner\AutoOpenOfficeRunner.au3"
-#include "..\..\utility\FileUtility.au3"
-#include "..\..\app\OpenSSL.au3"
+﻿#include "runner\AutoOpenOfficeRunner.au3"
+#include "utility\FileUtility.au3"
+#include "app\OpenSSL.au3"
 
 #region Globale_Argument_Define
-$OpenSSL_CmdPath = FileUtility_ScriptDirFilePath("..\..\bin\openssl.exe")
+$OpenSSL_CmdPath = FileUtility_ScriptDirFilePath("bin\openssl.exe")
 $OpenSSL_DebugLog = 1
 $AutoOpenOfficeRunner_KeyColumnMaxCount = 15
 #endregion Globale_Argument_Define
